@@ -1,0 +1,484 @@
+# Projeto Clientes
+
+Sistema web para cadastro, organização, pesquisa e análise de clientes Pessoa Física e Pessoa Jurídica.
+
+O projeto será desenvolvido com Django e utilizará PostgreSQL hospedado no Supabase.
+
+---
+
+## Visão Geral
+
+O sistema será utilizado inicialmente por um único usuário e funcionará como base central de consulta dos seus contatos e clientes.
+
+Principais funcionalidades previstas:
+
+- login;
+- dashboard;
+- cadastro de Pessoa Física;
+- cadastro de Pessoa Jurídica;
+- edição;
+- visualização de detalhes;
+- pesquisa;
+- filtros;
+- ativação e inativação;
+- relatórios;
+- exportação CSV, XLSX e PDF;
+- proteção e privacidade dos dados.
+
+---
+
+## Arquitetura Inicial
+
+```text
+Usuário
+   |
+   v
+Aplicação Django
+   |
+   v
+Django ORM
+   |
+   v
+PostgreSQL no Supabase
+```
+
+Responsabilidades:
+
+### Django
+
+- interface web;
+- autenticação;
+- regras de negócio;
+- validações;
+- cadastro;
+- pesquisa;
+- dashboard;
+- relatórios;
+- acesso ao banco.
+
+### Supabase
+
+- hospedagem do PostgreSQL;
+- conexão segura;
+- administração do banco;
+- recursos de backup conforme o plano utilizado.
+
+O projeto não utilizará inicialmente Supabase Auth, Realtime ou Storage.
+
+---
+
+## Estrutura do Repositório
+
+```text
+ProjetoClientes/
+├── AGENTS.md
+├── README.md
+├── .gitignore
+├── .env.example
+├── pyproject.toml
+├── Blueprint/
+│   ├── 00-overview/
+│   ├── 01-requisitos/
+│   ├── 02-modelagem/
+│   ├── 03-ui-ux/
+│   ├── 04-implementacao/
+│   ├── 05-testes/
+│   └── 06-deploy/
+├── backend/
+├── frontend/
+├── infrastructure/
+├── media/
+├── requirements/
+├── scripts/
+├── static/
+└── tests/
+```
+
+A organização interna do `backend/` será criada durante o setup do Django.
+
+---
+
+## Blueprint
+
+A pasta `Blueprint/` contém a documentação funcional e técnica do projeto.
+
+Ela deve ser consultada antes da implementação de cada módulo.
+
+### Overview
+
+```text
+Blueprint/00-overview/
+├── overview_roadmap_projeto_clientes.md
+└── relatorio_definicao_projeto_cadastro_clientes.md
+```
+
+Contém:
+
+- visão geral;
+- escopo;
+- roadmap;
+- arquitetura de alto nível;
+- riscos;
+- critérios iniciais.
+
+### Requisitos
+
+```text
+Blueprint/01-requisitos/
+├── campocadastroskill.md
+├── comportamento_dinamico_interface_skill.md
+├── dashboard_clientes_skill.md
+├── pesquisa_clientes_skill.md
+└── relatorios_clientes_skill.md
+```
+
+Contém:
+
+- campos;
+- regras;
+- comportamento do formulário;
+- pesquisa;
+- dashboard;
+- relatórios;
+- exportações.
+
+### Modelagem
+
+```text
+Blueprint/02-modelagem/
+└── modelagem_dados_clientes_skill.md
+```
+
+Contém:
+
+- entidade Cliente;
+- UML;
+- modelo entidade-relacionamento;
+- tipos de dados;
+- índices;
+- constraints;
+- esboço de `models.py`.
+
+### Interface e Navegação
+
+```text
+Blueprint/03-ui-ux/
+└── wireframes_navegacao_skill.md
+```
+
+Contém:
+
+- mapa de navegação;
+- wireframes;
+- layout;
+- responsividade;
+- acessibilidade;
+- fluxos.
+
+---
+
+## Escopo do MVP
+
+O MVP deverá incluir:
+
+1. projeto Django configurado;
+2. conexão com PostgreSQL do Supabase;
+3. login;
+4. proteção das páginas internas;
+5. cadastro PF;
+6. cadastro PJ;
+7. validação de CPF e CNPJ;
+8. documento único;
+9. edição;
+10. detalhes;
+11. pesquisa;
+12. ativação e inativação;
+13. dashboard;
+14. relatórios;
+15. exportações;
+16. testes;
+17. ambientes separados;
+18. publicação.
+
+---
+
+## Regras Principais
+
+### Pessoa Física
+
+Campos obrigatórios:
+
+- nome completo;
+- CPF;
+- telefone principal;
+- CEP.
+
+### Pessoa Jurídica
+
+Campos obrigatórios:
+
+- nome empresarial;
+- CNPJ;
+- telefone principal;
+- CEP.
+
+### Documento
+
+- CPF ou CNPJ obrigatório;
+- documento único;
+- validação dos dígitos verificadores;
+- armazenamento apenas com números;
+- máscara aplicada apenas na interface.
+
+### Situação
+
+- novos clientes iniciam como ativos;
+- clientes podem ser inativados;
+- exclusão definitiva não será a operação principal.
+
+### Duplicidades
+
+- CPF ou CNPJ repetido: bloqueio;
+- telefone repetido: alerta;
+- e-mail repetido: alerta;
+- nome semelhante: alerta.
+
+---
+
+## Modelo de Dados
+
+PF e PJ utilizarão a mesma entidade:
+
+```text
+Cliente
+```
+
+Campos principais:
+
+```text
+id
+tipo
+nome
+documento
+data_referencia
+email
+telefone
+cep
+logradouro
+numero
+complemento
+bairro
+cidade
+estado
+observacoes
+situacao
+criado_em
+atualizado_em
+criado_por
+atualizado_por
+```
+
+A chave primária prevista é UUID.
+
+---
+
+## Ambientes
+
+O projeto terá três ambientes.
+
+### Desenvolvimento
+
+- execução local;
+- dados fictícios;
+- depuração habilitada;
+- banco próprio.
+
+### QA ou Homologação
+
+- configuração semelhante à produção;
+- dados de teste;
+- validação antes da publicação;
+- banco separado.
+
+### Produção
+
+- dados reais;
+- `DEBUG=False`;
+- HTTPS;
+- backups;
+- logs;
+- banco exclusivo;
+- credenciais próprias.
+
+---
+
+## Tecnologias
+
+Tecnologias previstas:
+
+- Python;
+- Django;
+- PostgreSQL;
+- Supabase;
+- Django Templates;
+- HTML;
+- CSS;
+- JavaScript;
+- Git.
+
+As versões e dependências serão definidas durante o setup técnico.
+
+---
+
+## Setup
+
+O setup será realizado de forma incremental.
+
+Sequência prevista:
+
+```text
+1. Verificar Python
+2. Criar ambiente virtual
+3. Instalar Django
+4. Criar projeto
+5. Criar apps
+6. Configurar Git
+7. Configurar variáveis de ambiente
+8. Configurar Supabase
+9. Executar migrations
+10. Criar superusuário
+11. Validar conexão
+```
+
+Os comandos serão adicionados a este README quando o setup estiver concluído.
+
+---
+
+## Comandos
+
+Esta seção será atualizada após a definição das versões e dependências.
+
+Exemplos esperados:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+python backend\manage.py runserver
+python backend\manage.py test
+python backend\manage.py makemigrations
+python backend\manage.py migrate
+```
+
+---
+
+## Variáveis de Ambiente
+
+O projeto utilizará um arquivo `.env`, que não deverá ser versionado.
+
+Um arquivo `.env.example` deverá documentar as variáveis necessárias.
+
+Exemplo inicial:
+
+```env
+DJANGO_SECRET_KEY=
+DJANGO_DEBUG=
+DJANGO_ALLOWED_HOSTS=
+DATABASE_URL=
+```
+
+Nunca inclua credenciais reais no repositório.
+
+---
+
+## Segurança e Privacidade
+
+Diretrizes:
+
+- autenticação obrigatória;
+- segredos fora do código;
+- documentos mascarados em listagens;
+- validação no backend;
+- conexão segura com PostgreSQL;
+- dados reais separados dos ambientes de teste;
+- coleta apenas dos dados necessários;
+- proteção de informações pessoais;
+- preferência por inativação em vez de exclusão.
+
+---
+
+## Desenvolvimento com Agentes
+
+O projeto será desenvolvido com apoio do Antigravity e do Codex.
+
+Antes de editar código, o agente deve ler:
+
+```text
+AGENTS.md
+```
+
+O `AGENTS.md` define:
+
+- regras do projeto;
+- fonte de verdade;
+- convenções;
+- validações;
+- testes;
+- segurança;
+- comportamento esperado dos agentes.
+
+---
+
+## Roadmap
+
+```text
+Planejamento              Concluído
+Campos e validações       Concluído
+Pesquisa                  Concluído
+Relatórios                Concluído
+Dashboard                 Concluído
+Wireframes                Concluído
+Modelagem de dados        Concluído
+Setup técnico             Próxima etapa
+Autenticação              Pendente
+Cadastro                  Pendente
+Pesquisa implementada     Pendente
+Dashboard implementado    Pendente
+Relatórios implementados  Pendente
+Testes                    Pendente
+QA                        Pendente
+Produção                  Pendente
+```
+
+---
+
+## Testes
+
+A estratégia deverá cobrir:
+
+- modelos;
+- validadores;
+- formulários;
+- autenticação;
+- permissões;
+- cadastro;
+- edição;
+- pesquisa;
+- filtros;
+- dashboard;
+- relatórios;
+- exportações.
+
+Os comandos e ferramentas serão definidos no setup.
+
+---
+
+## Status Atual
+
+A fase de planejamento está concluída.
+
+Próxima etapa:
+
+```text
+Setup Técnico e Arquitetura de Ambientes
+```
+
+O setup será executado manualmente e de forma incremental.
