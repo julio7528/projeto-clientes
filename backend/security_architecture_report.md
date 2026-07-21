@@ -2,21 +2,17 @@
 
 ## Resumo
 
-A integracao Supabase foi isolada no backend. O navegador usa apenas endpoints Django autenticados, enquanto o Django atua como gateway de aplicacao e camada de autorizacao.
-
-Fluxo permitido:
-
-```text
-Browser -> Django -> Supabase
-```
+Fluxo permitido: `Browser -> Django -> Supabase`. O endpoint de Storage aceita somente UUID interno, resolve o caminho pelo ORM e valida ownership antes de usar a chave privilegiada.
 
 ## Arquivos Alterados
 
-- `.gitignore`
 - `.env.example`
+- `.gitignore`
 - `README.md`
 - `config/env.py`
 - `config/logging.py`
+- `config/models.py`
+- `config/migrations/0001_initial.py`
 - `config/settings.py`
 - `config/supabase.py`
 - `config/tests.py`
@@ -24,60 +20,57 @@ Browser -> Django -> Supabase
 - `config/views.py`
 - `security_architecture_report.md`
 
-## Controles Implementados
+## Controles
 
-- Carregamento centralizado de variaveis em `config/env.py`.
-- Validacao de variaveis obrigatorias sem imprimir valores secretos.
-- `.env.example` com placeholders, sem credenciais reais.
-- `.gitignore` garantindo que `.env` fique fora do Git.
-- `SUPABASE_SECRET_KEY` isolada em configuracao e camada de servico backend-only.
-- Operacoes normais de banco mantidas no Django ORM via `DATABASE_URL`.
-- Cliente administrativo minimo de Supabase Storage em `config/supabase.py`.
-- Endpoint autenticado para perfil protegido em `config/views.py`.
-- Endpoint autenticado para URL assinada curta de Storage privado.
-- Cookies HTTP-only, SameSite, Secure configuravel, HSTS, X-Frame-Options e content-type nosniff.
-- Filtro de logging para redigir valores sensiveis antes de escrita em handlers.
-- Testes cobrindo rejeicao de acesso anonimo e ausencia de segredos em respostas.
-- Teste para impedir referencias a chaves Supabase em templates e arquivos frontend.
+- `ProtectedFile` usa UUID, owner, caminho interno, nome e timestamp.
+- Browser envia `arquivo_id`; caminhos fornecidos pelo cliente nao participam da assinatura.
+- Ownership e validado antes da chamada privilegiada; acesso cruzado retorna 403 e UUID inexistente retorna 404.
+- TTL solicitado e limitado por `SUPABASE_SIGNED_URL_TTL_SECONDS`.
+- Respostas de Storage usam `no-store, private` e `no-cache`.
+- Corpo possui limite; JSON, UUID, metodo e tipos sao validados.
+- Erros Supabase e de banco nao sao devolvidos ao cliente.
+- Filtro de logging redige segredos, Bearer/apikey, URLs de banco e URLs assinadas; o codigo nao registra body ou headers.
+- Chave publishable e opcional, backend-only e atualmente sem uso.
+- Cookies, HTTPS e HSTS usam defaults seguros por ambiente.
+- `X-Forwarded-Proto` so e confiado por configuracao explicita.
+- `.env` continua ignorado e `.env.example` possui somente placeholders.
 
-## Variaveis Obrigatorias
+## Variaveis
 
-- `DJANGO_SECRET_KEY`
-- `DJANGO_DEBUG`
-- `DJANGO_ALLOWED_HOSTS`
-- `DATABASE_URL`
-- `SUPABASE_URL`
-- `SUPABASE_PUBLISHABLE_KEY`
-- `SUPABASE_SECRET_KEY`
+Obrigatorias: `DJANGO_SECRET_KEY`, `DATABASE_URL`, `SUPABASE_URL`, `SUPABASE_SECRET_KEY`.
 
-## Variaveis Opcionais
+Opcionais: `DJANGO_DEBUG`, `DJANGO_ALLOWED_HOSTS`, `DJANGO_CSRF_TRUSTED_ORIGINS`, `DJANGO_SESSION_COOKIE_SECURE`, `DJANGO_CSRF_COOKIE_SECURE`, `DJANGO_SECURE_SSL_REDIRECT`, `DJANGO_TRUST_X_FORWARDED_PROTO`, `DJANGO_SECURE_HSTS_SECONDS`, `DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS`, `DJANGO_SECURE_HSTS_PRELOAD`, `SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_PRIVATE_STORAGE_BUCKET`, `SUPABASE_SIGNED_URL_TTL_SECONDS`, `PRIVATE_STORAGE_REQUEST_MAX_BYTES`.
 
-- `DJANGO_CSRF_TRUSTED_ORIGINS`
-- `DJANGO_SESSION_COOKIE_SECURE`
-- `DJANGO_CSRF_COOKIE_SECURE`
-- `DJANGO_SECURE_SSL_REDIRECT`
-- `DJANGO_SECURE_HSTS_SECONDS`
-- `DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS`
-- `DJANGO_SECURE_HSTS_PRELOAD`
-- `SUPABASE_PRIVATE_STORAGE_BUCKET`
-- `SUPABASE_SIGNED_URL_TTL_SECONDS`
+## Ambientes
+
+- Local HTTP: `DJANGO_DEBUG=True`; cookies Secure, redirect SSL e HSTS ficam desativados por default.
+- Producao HTTPS: `DJANGO_DEBUG=False`; cookies Secure, redirect HTTPS e HSTS ficam ativos por default.
+- Proxy: habilitar `DJANGO_TRUST_X_FORWARDED_PROTO=True` apenas se um proxy controlado sobrescrever o header recebido do cliente.
+
+## Migracao
+
+- `config/migrations/0001_initial.py` cria `ProtectedFile`.
+- Nao foi aplicada ao PostgreSQL Supabase.
+- `test` e `makemigrations` usam SQLite em memoria para nao consultar o banco remoto.
 
 ## Riscos Restantes
 
-- O `.env` atual deve usar uma `DJANGO_SECRET_KEY` propria do Django, diferente de qualquer chave Supabase.
-- As chaves e credenciais ja vistas no ambiente local devem ser rotacionadas se foram compartilhadas fora da maquina.
-- `DJANGO_ALLOWED_HOSTS` e `DJANGO_CSRF_TRUSTED_ORIGINS` precisam ser definidos com os dominios reais antes de producao.
-- O bucket privado do Supabase precisa existir e suas politicas devem refletir o modelo de autorizacao do Django.
-- URLs assinadas continuam validas ate expirar; manter TTL baixo e evitar cache em clientes.
+- `DJANGO_SECRET_KEY` deve ser exclusiva do Django e diferente das chaves Supabase.
+- Chaves previamente compartilhadas devem ser rotacionadas.
+- A chave secreta ignora RLS; a checagem Django e um controle critico.
+- URLs assinadas continuam validas ate expirar e aparecem no Network por necessidade funcional; nao registrar responses em analytics ou proxies.
+- O modelo atual autoriza apenas owner. Compartilhamento exige relacao explicita de usuarios autorizados.
+- Rate limiting depende da infraestrutura de deploy e ainda nao foi implementado.
 
-## Testes Executados
+## Comandos Executados
 
-- `python manage.py check`
-- `python manage.py test config`
+- `python backend/manage.py check`: sucesso, 0 issues.
+- `python backend/manage.py makemigrations --check --dry-run`: sucesso, nenhuma mudanca detectada.
+- `python backend/manage.py test config`: sucesso, 16 testes aprovados.
 
 ## Proximos Passos
 
-- Rotacionar segredos se houve exposicao.
-- Configurar dominios reais em `DJANGO_ALLOWED_HOSTS` e `DJANGO_CSRF_TRUSTED_ORIGINS`.
-- Criar modelos Django reais para clientes e manter CRUD via ORM.
-- Mapear autorizacao por usuario antes de liberar arquivos privados do Storage.
+- Revisar e aplicar a migracao em janela controlada no ambiente correto.
+- Configurar hosts, origens, proxy e HTTPS reais de producao.
+- Adicionar rate limiting conforme a infraestrutura escolhida.
+- Modelar compartilhamento explicito se necessario.

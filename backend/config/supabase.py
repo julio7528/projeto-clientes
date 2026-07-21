@@ -19,7 +19,7 @@ class SupabaseServiceConfig:
     signed_url_ttl_seconds: int
 
 
-def get_supabase_config():
+def get_supabase_config() -> SupabaseServiceConfig:
     return SupabaseServiceConfig(
         url=settings.SUPABASE_URL.rstrip("/"),
         secret_key=settings.SUPABASE_SECRET_KEY,
@@ -28,14 +28,17 @@ def get_supabase_config():
     )
 
 
-def _validate_storage_path(object_path):
+def _validate_storage_path(object_path: str) -> str:
     clean_path = object_path.strip().lstrip("/")
     if not clean_path or ".." in clean_path.split("/"):
         raise ValueError("Invalid storage object path.")
     return clean_path
 
 
-def create_private_storage_signed_url(object_path, expires_in=None):
+def create_private_storage_signed_url(
+    object_path: str,
+    expires_in: int | None = None,
+) -> dict[str, str | int]:
     service_config = get_supabase_config()
     clean_path = _validate_storage_path(object_path)
     ttl = expires_in or service_config.signed_url_ttl_seconds

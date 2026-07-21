@@ -31,7 +31,7 @@ DEBUG = bool_env("DJANGO_DEBUG", default=False)
 
 # Supabase stays server-side. The browser talks only to Django.
 SUPABASE_URL = required_env("SUPABASE_URL")
-SUPABASE_PUBLISHABLE_KEY = required_env("SUPABASE_PUBLISHABLE_KEY")
+SUPABASE_PUBLISHABLE_KEY = optional_env("SUPABASE_PUBLISHABLE_KEY")
 SUPABASE_SECRET_KEY = required_env("SUPABASE_SECRET_KEY")
 SUPABASE_PRIVATE_STORAGE_BUCKET = optional_env("SUPABASE_PRIVATE_STORAGE_BUCKET", default="private")
 SUPABASE_SIGNED_URL_TTL_SECONDS = int_env("SUPABASE_SIGNED_URL_TTL_SECONDS", default=60)
@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'config',
 ]
 
 MIDDLEWARE = [
@@ -93,7 +94,8 @@ DATABASES = {
     )
 }
 
-if "test" in sys.argv:
+ISOLATED_DATABASE_COMMANDS = {"test", "makemigrations"}
+if ISOLATED_DATABASE_COMMANDS.intersection(sys.argv):
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
@@ -145,13 +147,27 @@ SESSION_COOKIE_SAMESITE = "Lax"
 CSRF_COOKIE_SAMESITE = "Lax"
 SESSION_COOKIE_SECURE = bool_env("DJANGO_SESSION_COOKIE_SECURE", default=not DEBUG)
 CSRF_COOKIE_SECURE = bool_env("DJANGO_CSRF_COOKIE_SECURE", default=not DEBUG)
-SECURE_SSL_REDIRECT = bool_env("DJANGO_SECURE_SSL_REDIRECT", default=False)
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+SECURE_SSL_REDIRECT = bool_env("DJANGO_SECURE_SSL_REDIRECT", default=not DEBUG)
+if "test" in sys.argv:
+    SECURE_SSL_REDIRECT = False
+DJANGO_TRUST_X_FORWARDED_PROTO = bool_env(
+    "DJANGO_TRUST_X_FORWARDED_PROTO",
+    default=False,
+)
+SECURE_PROXY_SSL_HEADER = (
+    ("HTTP_X_FORWARDED_PROTO", "https")
+    if DJANGO_TRUST_X_FORWARDED_PROTO
+    else None
+)
 SECURE_HSTS_SECONDS = int_env("DJANGO_SECURE_HSTS_SECONDS", default=31536000 if not DEBUG else 0)
 SECURE_HSTS_INCLUDE_SUBDOMAINS = bool_env("DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS", default=not DEBUG)
 SECURE_HSTS_PRELOAD = bool_env("DJANGO_SECURE_HSTS_PRELOAD", default=False)
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = "DENY"
+PRIVATE_STORAGE_REQUEST_MAX_BYTES = int_env(
+    "PRIVATE_STORAGE_REQUEST_MAX_BYTES",
+    default=4096,
+)
 
 LOG_REDACTED_SECRETS = tuple(
     value
