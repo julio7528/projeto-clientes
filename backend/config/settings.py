@@ -11,8 +11,10 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+import sys
 import dj_database_url
-from decouple import config
+
+from .env import bool_env, csv_env, int_env, optional_env, required_env
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,12 +24,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config("DJANGO_SECRET_KEY")
+SECRET_KEY = required_env("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config("DJANGO_DEBUG", default=False, cast=bool)
+DEBUG = bool_env("DJANGO_DEBUG", default=False)
 
-ALLOWED_HOSTS = []
+# Supabase stays server-side. The browser talks only to Django.
+SUPABASE_URL = required_env("SUPABASE_URL")
+SUPABASE_PUBLISHABLE_KEY = required_env("SUPABASE_PUBLISHABLE_KEY")
+SUPABASE_SECRET_KEY = required_env("SUPABASE_SECRET_KEY")
+SUPABASE_PRIVATE_STORAGE_BUCKET = optional_env("SUPABASE_PRIVATE_STORAGE_BUCKET", default="private")
+SUPABASE_SIGNED_URL_TTL_SECONDS = int_env("SUPABASE_SIGNED_URL_TTL_SECONDS", default=60)
+
+ALLOWED_HOSTS = csv_env("DJANGO_ALLOWED_HOSTS", default="localhost,127.0.0.1")
+CSRF_TRUSTED_ORIGINS = csv_env("DJANGO_CSRF_TRUSTED_ORIGINS", default="")
 
 
 # Application definition
@@ -76,12 +86,20 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     "default": dj_database_url.config(
-        default=config("DATABASE_URL"),
+        default=required_env("DATABASE_URL"),
         conn_max_age=60,
         conn_health_checks=True,
         ssl_require=True,
     )
 }
+
+if "test" in sys.argv:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": ":memory:",
+        }
+    }
 
 
 # Password validation
@@ -119,3 +137,49 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# Production-oriented transport and cookie security.
+SESSION_COOKIE_HTTPONLY = True
+CSRF_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = "Lax"
+CSRF_COOKIE_SAMESITE = "Lax"
+SESSION_COOKIE_SECURE = bool_env("DJANGO_SESSION_COOKIE_SECURE", default=not DEBUG)
+CSRF_COOKIE_SECURE = bool_env("DJANGO_CSRF_COOKIE_SECURE", default=not DEBUG)
+SECURE_SSL_REDIRECT = bool_env("DJANGO_SECURE_SSL_REDIRECT", default=False)
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+SECURE_HSTS_SECONDS = int_env("DJANGO_SECURE_HSTS_SECONDS", default=31536000 if not DEBUG else 0)
+SECURE_HSTS_INCLUDE_SUBDOMAINS = bool_env("DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS", default=not DEBUG)
+SECURE_HSTS_PRELOAD = bool_env("DJANGO_SECURE_HSTS_PRELOAD", default=False)
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = "DENY"
+
+LOG_REDACTED_SECRETS = tuple(
+    value
+    for value in (
+        SECRET_KEY,
+        DATABASES["default"].get("PASSWORD"),
+        SUPABASE_PUBLISHABLE_KEY,
+        SUPABASE_SECRET_KEY,
+    )
+    if value
+)
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "filters": {
+        "redact_secrets": {
+            "()": "config.logging.SecretRedactionFilter",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "filters": ["redact_secrets"],
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "INFO",
+    },
+}

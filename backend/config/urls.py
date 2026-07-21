@@ -17,6 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from . import views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path("api/protected/profile/", views.protected_profile, name="protected-profile"),
+    path("api/storage/private-url/", views.private_storage_url, name="private-storage-url"),
 ]
