@@ -135,6 +135,32 @@ Responsabilidades atuais:
 ownership e fluxo de Storage inalterados. A criação de uma app `arquivos` está
 adiada até que o vínculo e o ciclo de vida dos arquivos de clientes sejam definidos.
 
+### Domínio de clientes — Fase 2.3
+
+O backend possui agora uma entidade única `clientes.Cliente` para Pessoa Física e
+Pessoa Jurídica. O modelo herda UUID e timestamps de `core.UUIDTimestampedModel`,
+mantém endereço e contato principal integrados e registra autoria por
+`settings.AUTH_USER_MODEL`.
+
+Regras implementadas no backend:
+
+- choices de tipo (`PF`/`PJ`), situação (`ATIVO`/`INATIVO`) e 27 UFs;
+- normalização idempotente de nome, documento, telefone, CEP, e-mail e endereço;
+- validação de CPF, CNPJ, coerência entre tipo e documento, telefone, CEP, UF,
+  data não futura e nome útil;
+- documento globalmente único com mensagem genérica, sem revelar outro cadastro;
+- constraints de tipo, situação e comprimentos críticos, além de índices de busca,
+  filtro, localidade e auditoria;
+- autoria com `criado_por=PROTECT` e `atualizado_por=SET_NULL`;
+- alertas não bloqueantes de telefone e e-mail repetidos, limitados ao ownership do
+  usuário comum e globais somente para administradores;
+- Admin com documento mascarado na lista, autoria protegida e ações de ativação e
+  inativação.
+
+A migration `clientes/0001_initial.py` foi gerada e validada somente no banco de
+teste isolado. Ela não foi aplicada ao PostgreSQL do Supabase. O CRUD e a aplicação
+de migrations por ambiente permanecem para etapas posteriores e controladas.
+
 ---
 
 ## Blueprint

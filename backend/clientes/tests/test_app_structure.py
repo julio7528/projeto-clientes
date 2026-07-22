@@ -19,18 +19,21 @@ class ClientesAppStructureTests(SimpleTestCase):
         self.assertEqual(apps.get_app_config("usuarios").name, "usuarios")
         self.assertEqual(settings.AUTH_USER_MODEL, "usuarios.Usuario")
 
-    def test_clientes_has_no_concrete_model_or_migration(self):
+    def test_clientes_has_definitive_model_and_initial_migration(self):
         clientes_config = apps.get_app_config("clientes")
-        self.assertEqual(list(clientes_config.get_models()), [])
+        self.assertEqual(
+            [model.__name__ for model in clientes_config.get_models()],
+            ["Cliente"],
+        )
 
         models_module = importlib.import_module("clientes.models")
-        self.assertFalse(hasattr(models_module, "Cliente"))
+        self.assertTrue(hasattr(models_module, "Cliente"))
 
         migration_files = sorted(
             path.name
             for path in (Path(settings.BASE_DIR) / "clientes" / "migrations").glob("*.py")
         )
-        self.assertEqual(migration_files, ["__init__.py"])
+        self.assertEqual(migration_files, ["0001_initial.py", "__init__.py"])
 
     def test_clientes_urlconf_is_namespaced_but_not_published(self):
         clientes_urls = importlib.import_module("clientes.urls")
@@ -60,7 +63,7 @@ class DependencyBoundaryTests(SimpleTestCase):
     forbidden_dependencies = {
         "core": {"config", "usuarios", "clientes"},
         "usuarios": {"clientes"},
-        "clientes": {"config", "usuarios"},
+        "clientes": {"config"},
     }
 
     def test_production_modules_respect_dependency_boundaries(self):
