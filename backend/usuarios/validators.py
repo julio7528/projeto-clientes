@@ -1,10 +1,6 @@
-import re
-
 from django.core.exceptions import ValidationError
 
-
-def normalize_digits(value: str) -> str:
-    return re.sub(r"\D", "", value or "")
+from core.normalizers import normalize_digits
 
 
 def validate_cpf(value: str | None) -> None:

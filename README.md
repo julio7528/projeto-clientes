@@ -34,12 +34,8 @@ Usuário
    |
    v
 Aplicação Django
-   |
-   v
-Django ORM
-   |
-   v
-PostgreSQL no Supabase
+   ├── Django ORM -> PostgreSQL no Supabase
+   └── serviço backend-only -> Storage privado no Supabase
 ```
 
 Responsabilidades:
@@ -59,11 +55,14 @@ Responsabilidades:
 ### Supabase
 
 - hospedagem do PostgreSQL;
+- Storage privado acessado exclusivamente pelo backend Django;
 - conexão segura;
 - administração do banco;
 - recursos de backup conforme o plano utilizado.
 
-O projeto não utilizará inicialmente Supabase Auth, Realtime ou Storage.
+O projeto não utiliza Supabase Auth ou Realtime. Segredos, caminhos internos e
+operações privilegiadas do Storage permanecem no backend; o navegador recebe
+somente URLs assinadas de curta duração após autenticação e validação de ownership.
 
 ---
 
@@ -94,7 +93,47 @@ ProjetoClientes/
 └── tests/
 ```
 
-A organização interna do `backend/` será criada durante o setup do Django.
+A organização modular atual do backend é:
+
+```text
+backend/
+├── config/
+│   ├── settings.py
+│   ├── urls.py
+│   ├── supabase.py
+│   ├── models.py              # ProtectedFile temporariamente
+│   └── migrations/
+├── core/
+│   ├── apps.py
+│   ├── models.py              # abstrações compartilhadas
+│   ├── normalizers.py
+│   ├── migrations/            # sem migration concreta
+│   └── tests/
+├── usuarios/
+│   ├── models.py              # usuarios.Usuario
+│   ├── permissions.py
+│   ├── urls.py
+│   ├── templates/
+│   ├── migrations/
+│   └── tests.py
+└── clientes/
+    ├── apps.py
+    ├── models.py              # sem Cliente nesta fase
+    ├── urls.py                # namespace reservado, não incluído ainda
+    ├── migrations/            # sem migration concreta
+    └── tests/
+```
+
+Responsabilidades atuais:
+
+- `config`: configuração do projeto, composição de URLs e infraestrutura Supabase;
+- `core`: abstrações e normalizadores realmente compartilhados, sem regras de domínio;
+- `usuarios`: identidade, autenticação por e-mail, perfil, Admin e ownership;
+- `clientes`: limite do futuro domínio PF/PJ, estruturado sem modelo ou rotas concretas.
+
+`ProtectedFile` permanece temporariamente em `config`, com tabela, migrations,
+ownership e fluxo de Storage inalterados. A criação de uma app `arquivos` está
+adiada até que o vínculo e o ciclo de vida dos arquivos de clientes sejam definidos.
 
 ---
 
@@ -437,8 +476,9 @@ Relatórios                Concluído
 Dashboard                 Concluído
 Wireframes                Concluído
 Modelagem de dados        Concluído
-Setup técnico             Próxima etapa
-Autenticação              Pendente
+Setup técnico             Concluído
+Autenticação              Concluído
+Estrutura modular         Concluído
 Cadastro                  Pendente
 Pesquisa implementada     Pendente
 Dashboard implementado    Pendente
@@ -473,12 +513,15 @@ Os comandos e ferramentas serão definidos no setup.
 
 ## Status Atual
 
-A fase de planejamento está concluída.
+A estrutura modular `config`, `core`, `usuarios` e `clientes` está concluída sem
+criar tabelas novas nesta etapa. A autenticação Django e o Storage privado foram
+preservados.
 
 Próxima etapa:
 
 ```text
-Setup Técnico e Arquitetura de Ambientes
+Fase 2.3 — implementação do modelo Cliente
 ```
 
-O setup será executado manualmente e de forma incremental.
+A próxima fase deverá implementar a entidade única `Cliente`, suas escolhas,
+normalizações, validações, autoria, índices, constraints, Admin, migration e testes.
