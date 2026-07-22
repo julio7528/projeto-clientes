@@ -109,7 +109,7 @@ class AuthenticationTests(TestCase):
             {"username": self.user.email, "password": self.password},
         )
 
-        self.assertRedirects(response, reverse("usuarios:perfil"))
+        self.assertRedirects(response, reverse("clientes:list"))
         self.assertEqual(str(self.client.session["_auth_user_id"]), str(self.user.pk))
 
     def test_invalid_login_is_generic_and_does_not_leak_password_or_secrets(self):
@@ -152,6 +152,36 @@ class AuthenticationTests(TestCase):
         response = self.client.post(reverse("usuarios:logout"))
         self.assertRedirects(response, reverse("usuarios:login"))
         self.assertNotIn("_auth_user_id", self.client.session)
+
+    def test_login_honors_safe_local_next_and_rejects_external_next(self):
+        local_target = reverse("usuarios:perfil")
+        response = self.client.post(
+            reverse("usuarios:login"),
+            {"username": self.user.email, "password": self.password, "next": local_target},
+        )
+        self.assertRedirects(response, local_target)
+
+        self.client.logout()
+        response = self.client.post(
+            reverse("usuarios:login"),
+            {
+                "username": self.user.email,
+                "password": self.password,
+                "next": "https://attacker.example/collect",
+            },
+        )
+        self.assertRedirects(response, reverse("clientes:list"))
+
+    def test_authenticated_user_is_redirected_away_from_login(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse("usuarios:login"))
+        self.assertRedirects(response, reverse("clientes:list"))
+
+    def test_profile_uses_private_no_store_headers(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse("usuarios:perfil"))
+        self.assertEqual(response["Cache-Control"], "private, no-store")
+        self.assertEqual(response["Pragma"], "no-cache")
 
 
 class AuthorizationTests(TestCase):

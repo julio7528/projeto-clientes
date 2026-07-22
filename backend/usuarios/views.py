@@ -8,6 +8,8 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.views.decorators.http import require_POST
 
+from core.http import private_no_store
+
 from .forms import EmailAuthenticationForm, PerfilForm
 from .models import Usuario
 from .permissions import is_administrator
@@ -26,11 +28,13 @@ def logout_view(request: HttpRequest) -> HttpResponse:
 
 
 @login_required
+@private_no_store
 def perfil(request: HttpRequest) -> HttpResponse:
     return render(request, "usuarios/perfil.html", {"usuario_perfil": request.user})
 
 
 @login_required
+@private_no_store
 def editar_perfil(request: HttpRequest, usuario_id: UUID) -> HttpResponse:
     usuario = get_object_or_404(Usuario, pk=usuario_id)
     if usuario.pk != request.user.pk and not is_administrator(request.user):
@@ -53,3 +57,9 @@ def editar_perfil(request: HttpRequest, usuario_id: UUID) -> HttpResponse:
 class AlterarSenhaView(PasswordChangeView):
     template_name = "usuarios/alterar_senha.html"
     success_url = reverse_lazy("usuarios:perfil")
+
+    def dispatch(self, request, *args, **kwargs):
+        response = super().dispatch(request, *args, **kwargs)
+        response["Cache-Control"] = "private, no-store"
+        response["Pragma"] = "no-cache"
+        return response

@@ -1,0 +1,7 @@
+{% if duplicate_warnings %}
+  <section class="duplicate-warning" aria-labelledby="duplicate-title">
+    <h2 id="duplicate-title">Possível cadastro repetido</h2>
+    {% for warning in duplicate_warnings %}<p>{{ warning.message }} Deseja continuar?</p>{% endfor %}
+    <p>Nenhum outro cadastro será alterado.</p>
+  </section>
+{% endif %}

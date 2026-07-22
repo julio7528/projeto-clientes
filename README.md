@@ -157,9 +157,45 @@ Regras implementadas no backend:
 - Admin com documento mascarado na lista, autoria protegida e ações de ativação e
   inativação.
 
-A migration `clientes/0001_initial.py` foi gerada e validada somente no banco de
-teste isolado. Ela não foi aplicada ao PostgreSQL do Supabase. O CRUD e a aplicação
-de migrations por ambiente permanecem para etapas posteriores e controladas.
+A migration `clientes/0001_initial.py` foi inicialmente validada no banco de teste
+isolado e depois aplicada de forma controlada ao Supabase de desenvolvimento,
+conforme registrado na etapa seguinte.
+
+### Migrations, autenticação integrada e cadastro — Fases 2.4 a 2.6
+
+Em 22/07/2026, as migrations iniciais de Django, `usuarios`, `clientes` e `config`
+foram aplicadas ao projeto Supabase explicitamente confirmado como ambiente de
+desenvolvimento vazio e descartável. O plano posterior não possui operações
+pendentes; tabelas, constraints, índices e acesso pelo ORM foram verificados sem
+persistir dados de smoke test.
+
+O destino temporário após login é `clientes:list`. Redirecionamentos por `next`
+aceitam somente destinos locais validados; logout continua exclusivamente por POST
+com CSRF. Páginas internas com dados pessoais retornam `Cache-Control: private,
+no-store`.
+
+Rotas do fluxo inicial:
+
+- `GET /clientes/` — lista paginada e restrita por ownership;
+- `GET|POST /clientes/novo/` — cadastro único PF/PJ;
+- `GET /clientes/<uuid>/` — detalhes autorizados;
+- `GET|POST /clientes/<uuid>/editar/` — edição autorizada;
+- `POST /clientes/<uuid>/ativar/` — ativação idempotente;
+- `POST /clientes/<uuid>/inativar/` — inativação idempotente.
+
+Usuários comuns acessam somente clientes em que são `criado_por`; administradores
+acessam todos. A busca por objeto ocorre sempre no queryset já limitado, portanto
+acesso cruzado retorna 404. Documento duplicado bloqueia com mensagem genérica.
+Telefone e e-mail repetidos exigem confirmação explícita em segundo POST; a
+confirmação é assinada, expira e deixa de valer quando os valores mudam.
+
+O primeiro superusuário ainda deve ser criado manualmente, com senha interativa:
+
+```powershell
+.\.venv\Scripts\python.exe backend\manage.py createsuperuser --email EMAIL_DO_ADMINISTRADOR
+```
+
+Não coloque a senha no comando, em arquivo ou no histórico compartilhado.
 
 ---
 
@@ -539,15 +575,12 @@ Os comandos e ferramentas serão definidos no setup.
 
 ## Status Atual
 
-A estrutura modular `config`, `core`, `usuarios` e `clientes` está concluída sem
-criar tabelas novas nesta etapa. A autenticação Django e o Storage privado foram
-preservados.
+As migrations iniciais estão aplicadas no Supabase de desenvolvimento. A
+autenticação Django está integrada à lista de clientes e o fluxo inicial de cadastro,
+detalhes, edição, ativação e inativação está implementado com ownership e testes.
 
 Próxima etapa:
 
 ```text
-Fase 2.3 — implementação do modelo Cliente
+Fase 2.7 — pesquisa e filtros de clientes
 ```
-
-A próxima fase deverá implementar a entidade única `Cliente`, suas escolhas,
-normalizações, validações, autoria, índices, constraints, Admin, migration e testes.

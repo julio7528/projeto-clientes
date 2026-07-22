@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}{{ cliente.nome }}{% endblock %}
+{% block breadcrumb %}<a href="{% url 'clientes:list' %}">Clientes</a> / <span aria-current="page">Detalhes</span>{% endblock %}
+{% block content %}
+  <header class="detail-header">
+    <div>
+      <h1>{{ cliente.nome }}</h1>
+      <p class="lede">{{ cliente.get_tipo_display }} · <span class="status status-{{ cliente.situacao|lower }}">{{ cliente.get_situacao_display }}</span></p>
+    </div>
+    <div class="detail-actions">
+      <a class="button button-secondary" href="{% url 'clientes:update' cliente.pk %}">Editar</a>
+      {% include "clientes/partials/status_actions.html" %}
+    </div>
+  </header>
+
+  <section aria-labelledby="identificacao"><h2 id="identificacao">Identificação</h2>
+    <dl class="detail-list">
+      <div><dt>{% if cliente.tipo == "PJ" %}CNPJ{% else %}CPF{% endif %}</dt><dd>{{ documento_formatado }}</dd></div>
+      <div><dt>{% if cliente.tipo == "PJ" %}Data de abertura{% else %}Data de nascimento{% endif %}</dt><dd>{{ cliente.data_referencia|date:"d/m/Y"|default:"—" }}</dd></div>
+    </dl>
+  </section>
+  <section aria-labelledby="contato"><h2 id="contato">Contato</h2>
+    <dl class="detail-list">
+      <div><dt>Telefone</dt><dd>{{ telefone_formatado }}</dd></div>
+      <div><dt>E-mail</dt><dd>{{ cliente.email|default:"—" }}</dd></div>
+    </dl>
+  </section>
+  <section aria-labelledby="endereco"><h2 id="endereco">Endereço</h2>
+    <dl class="detail-list">
+      <div><dt>CEP</dt><dd>{{ cliente.cep }}</dd></div><div><dt>Localidade</dt><dd>{{ cliente.cidade|default:"—" }}{% if cliente.estado %}/{{ cliente.estado }}{% endif %}</dd></div>
+      <div><dt>Logradouro</dt><dd>{{ cliente.logradouro|default:"—" }}</dd></div><div><dt>Número</dt><dd>{{ cliente.numero|default:"—" }}</dd></div>
+      <div><dt>Complemento</dt><dd>{{ cliente.complemento|default:"—" }}</dd></div><div><dt>Bairro</dt><dd>{{ cliente.bairro|default:"—" }}</dd></div>
+    </dl>
+  </section>
+  <section aria-labelledby="observacoes"><h2 id="observacoes">Observações</h2><p>{{ cliente.observacoes|default:"—"|linebreaksbr }}</p></section>
+  <section aria-labelledby="controle"><h2 id="controle">Controle</h2>
+    <dl class="detail-list"><div><dt>Criado em</dt><dd>{{ cliente.criado_em|date:"d/m/Y H:i" }}</dd></div><div><dt>Atualizado em</dt><dd>{{ cliente.atualizado_em|date:"d/m/Y H:i" }}</dd></div></dl>
+  </section>
+{% endblock %}

@@ -86,7 +86,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 AUTH_USER_MODEL = "usuarios.Usuario"
 LOGIN_URL = "usuarios:login"
-LOGIN_REDIRECT_URL = "usuarios:perfil"
+LOGIN_REDIRECT_URL = "clientes:list"
 LOGOUT_REDIRECT_URL = "usuarios:login"
 
 

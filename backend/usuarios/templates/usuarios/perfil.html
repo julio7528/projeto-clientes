@@ -6,8 +6,4 @@
   <p>{{ usuario_perfil.email }}</p>
   <a href="{% url 'usuarios:editar-perfil' usuario_perfil.pk %}">Editar perfil</a>
   <a href="{% url 'usuarios:alterar-senha' %}">Alterar senha</a>
-  <form method="post" action="{% url 'usuarios:logout' %}">
-    {% csrf_token %}
-    <button type="submit">Sair</button>
-  </form>
 {% endblock %}

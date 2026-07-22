@@ -30,6 +30,35 @@ Rotas:
 
 Consultas futuras de dominio devem usar `scope_owned_queryset()` em `usuarios/permissions.py`: administradores recebem o queryset completo e usuarios comuns recebem somente registros do proprio owner.
 
+O destino padrao temporario apos login e `clientes:list`. O parametro `next` e
+aceito somente quando aponta para uma URL local segura. Usuario ja autenticado nao
+permanece na tela de login; logout continua POST-only com CSRF.
+
+## Clientes
+
+Rotas autenticadas:
+
+- `GET /clientes/` (`clientes:list`);
+- `GET|POST /clientes/novo/` (`clientes:create`);
+- `GET /clientes/<uuid>/` (`clientes:detail`);
+- `GET|POST /clientes/<uuid>/editar/` (`clientes:update`);
+- `POST /clientes/<uuid>/ativar/` (`clientes:activate`);
+- `POST /clientes/<uuid>/inativar/` (`clientes:deactivate`).
+
+`ClienteForm` usa allowlist de campos e nunca aceita ID, situacao, timestamps ou
+autoria. O backend define `criado_por` e `atualizado_por`, executa validacao de
+dominio e persiste em `transaction.atomic()`. Mascaras locais sao apenas melhoria
+progressiva; CPF/CNPJ, telefone e CEP tambem funcionam sem JavaScript.
+
+Consultas de lista e objeto usam `scope_owned_queryset()` antes do lookup. Usuario
+comum recebe 404 ao tentar acessar outro owner; administrador possui escopo global.
+Documento e unico e bloqueante. Telefone e e-mail repetidos exigem segundo POST com
+token assinado vinculado aos valores normalizados, usuario e registro editado.
+
+Paginas internas retornam `Cache-Control: private, no-store` e `Pragma: no-cache`.
+Nao existem delete, consulta externa de CEP, busca avancada ou credenciais Supabase
+no frontend.
+
 ## Autorizacao de Storage
 
 `POST /api/storage/private-url/` recebe:
@@ -89,4 +118,22 @@ python backend/manage.py test usuarios config
 
 Os comandos `test` e `makemigrations` usam SQLite em memoria e nao acessam o PostgreSQL Supabase.
 
-O PostgreSQL Supabase foi verificado como banco sem migrations aplicadas. O `db.sqlite3` local antigo possui migrations do usuario padrao e nao deve receber as novas migrations; recrie esse banco de desenvolvimento de forma controlada antes de usar `migrate` localmente.
+O `db.sqlite3` local antigo possui migrations do usuario padrao e nao deve receber
+as migrations atuais. Testes e `makemigrations` usam SQLite em memoria; operacoes
+normais usam o PostgreSQL configurado.
+
+## Estado das migrations de desenvolvimento
+
+Em 22/07/2026, as migrations `contenttypes`, `auth`, `usuarios`, `admin`, `clientes`,
+`config` e `sessions` foram aplicadas com sucesso ao Supabase de desenvolvimento
+confirmado como vazio e descartavel. O plano posterior retornou `No planned
+migration operations`; tabelas, constraints, indices, ORM e conexao foram
+verificados.
+
+Ainda nao existe superusuario nesse banco. Crie-o apenas de forma interativa:
+
+```powershell
+.\.venv\Scripts\python.exe backend\manage.py createsuperuser --email EMAIL_DO_ADMINISTRADOR
+```
+
+Nunca inclua a senha no comando.

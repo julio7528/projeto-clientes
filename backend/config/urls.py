@@ -22,6 +22,7 @@ from . import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("usuarios/", include("usuarios.urls")),
+    path("clientes/", include("clientes.urls")),
     path("api/protected/profile/", views.protected_profile, name="protected-profile"),
     path("api/storage/private-url/", views.private_storage_url, name="private-storage-url"),
 ]

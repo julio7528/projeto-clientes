@@ -7,7 +7,6 @@ from django.conf import settings
 from django.db.models.deletion import PROTECT
 from django.test import SimpleTestCase
 from django.urls import reverse
-from django.urls.exceptions import NoReverseMatch
 
 from config.models import ProtectedFile
 
@@ -35,13 +34,12 @@ class ClientesAppStructureTests(SimpleTestCase):
         )
         self.assertEqual(migration_files, ["0001_initial.py", "__init__.py"])
 
-    def test_clientes_urlconf_is_namespaced_but_not_published(self):
+    def test_clientes_urlconf_is_namespaced_and_published(self):
         clientes_urls = importlib.import_module("clientes.urls")
         self.assertEqual(clientes_urls.app_name, "clientes")
-        self.assertEqual(clientes_urls.urlpatterns, [])
-
-        with self.assertRaises(NoReverseMatch):
-            reverse("clientes:index")
+        self.assertEqual(len(clientes_urls.urlpatterns), 6)
+        self.assertEqual(reverse("clientes:list"), "/clientes/")
+        self.assertEqual(reverse("clientes:create"), "/clientes/novo/")
 
     def test_existing_url_names_remain_compatible(self):
         self.assertEqual(reverse("usuarios:login"), "/usuarios/entrar/")
@@ -92,8 +90,13 @@ class DependencyBoundaryTests(SimpleTestCase):
         secret_values = tuple(value for value in settings.LOG_REDACTED_SECRETS if value)
         violations = []
 
+        checked_suffixes = {".py", ".html", ".css", ".js"}
         for app_name in ("core", "clientes"):
-            for path in (Path(settings.BASE_DIR) / app_name).rglob("*.py"):
+            for path in (Path(settings.BASE_DIR) / app_name).rglob("*"):
+                if not path.is_file() or path.suffix not in checked_suffixes:
+                    continue
+                if "tests" in path.parts or "migrations" in path.parts:
+                    continue
                 source = path.read_text(encoding="utf-8")
                 if any(name in source for name in forbidden_names):
                     violations.append(str(path))

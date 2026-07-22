@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Clientes{% endblock %}
+{% block breadcrumb %}<span aria-current="page">Clientes</span>{% endblock %}
+{% block content %}
+  <header class="page-heading">
+    <div>
+      <h1>Clientes</h1>
+      <p class="lede">Cadastros disponíveis para sua conta.</p>
+    </div>
+    <a class="button" href="{% url 'clientes:create' %}">Novo cliente</a>
+  </header>
+
+  {% if rows %}
+    <table class="data-table">
+      <thead><tr><th>Nome</th><th>Tipo</th><th>Documento</th><th>Telefone</th><th>Localidade</th><th>Situação</th><th>Ações</th></tr></thead>
+      <tbody>
+        {% for row in rows %}
+          <tr>
+            <td data-label="Nome">{{ row.cliente.nome }}</td>
+            <td data-label="Tipo">{{ row.cliente.get_tipo_display }}</td>
+            <td data-label="Documento">{{ row.documento }}</td>
+            <td data-label="Telefone">{{ row.telefone }}</td>
+            <td data-label="Localidade">{% if row.cliente.cidade %}{{ row.cliente.cidade }}{% if row.cliente.estado %}/{{ row.cliente.estado }}{% endif %}{% else %}—{% endif %}</td>
+            <td data-label="Situação"><span class="status status-{{ row.cliente.situacao|lower }}">{{ row.cliente.get_situacao_display }}</span></td>
+            <td data-label="Ações"><a href="{% url 'clientes:detail' row.cliente.pk %}">Detalhes</a> · <a href="{% url 'clientes:update' row.cliente.pk %}">Editar</a></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% if page.paginator.num_pages > 1 %}
+      <nav class="pagination" aria-label="Paginação">
+        {% if page.has_previous %}<a href="?page={{ page.previous_page_number }}">Anterior</a>{% endif %}
+        <span>Página {{ page.number }} de {{ page.paginator.num_pages }}</span>
+        {% if page.has_next %}<a href="?page={{ page.next_page_number }}">Próxima</a>{% endif %}
+      </nav>
+    {% endif %}
+  {% else %}
+    <div class="empty-state">
+      <h2>Nenhum cliente cadastrado</h2>
+      <p>Comece criando o primeiro cadastro da sua conta.</p>
+      <a class="button" href="{% url 'clientes:create' %}">Cadastrar primeiro cliente</a>
+    </div>
+  {% endif %}
+{% endblock %}

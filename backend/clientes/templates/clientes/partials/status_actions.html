@@ -1,0 +1,9 @@
+{% if cliente.situacao == "ATIVO" %}
+  <form method="post" action="{% url 'clientes:deactivate' cliente.pk %}">
+    {% csrf_token %}<button class="button-danger" type="submit">Inativar</button>
+  </form>
+{% else %}
+  <form method="post" action="{% url 'clientes:activate' cliente.pk %}">
+    {% csrf_token %}<button type="submit">Ativar</button>
+  </form>
+{% endif %}
