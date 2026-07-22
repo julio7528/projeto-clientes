@@ -1,41 +1,41 @@
 # Projeto Clientes
 
-Sistema web para cadastro, organização, pesquisa e análise de clientes Pessoa Física e Pessoa Jurídica.
+Sistema web para cadastro, organizaÃ§Ã£o, pesquisa e anÃ¡lise de clientes Pessoa FÃ­sica e Pessoa JurÃ­dica.
 
-O projeto será desenvolvido com Django e utilizará PostgreSQL hospedado no Supabase.
+O projeto serÃ¡ desenvolvido com Django e utilizarÃ¡ PostgreSQL hospedado no Supabase.
 
 ---
 
-## Visão Geral
+## VisÃ£o Geral
 
-O sistema será utilizado inicialmente por um único usuário e funcionará como base central de consulta dos seus contatos e clientes.
+O sistema serÃ¡ utilizado inicialmente por um Ãºnico usuÃ¡rio e funcionarÃ¡ como base central de consulta dos seus contatos e clientes.
 
 Principais funcionalidades previstas:
 
 - login;
 - dashboard;
-- cadastro de Pessoa Física;
-- cadastro de Pessoa Jurídica;
-- edição;
-- visualização de detalhes;
+- cadastro de Pessoa FÃ­sica;
+- cadastro de Pessoa JurÃ­dica;
+- ediÃ§Ã£o;
+- visualizaÃ§Ã£o de detalhes;
 - pesquisa;
 - filtros;
-- ativação e inativação;
-- relatórios;
-- exportação CSV, XLSX e PDF;
-- proteção e privacidade dos dados.
+- ativaÃ§Ã£o e inativaÃ§Ã£o;
+- relatÃ³rios;
+- exportaÃ§Ã£o CSV, XLSX e PDF;
+- proteÃ§Ã£o e privacidade dos dados.
 
 ---
 
 ## Arquitetura Inicial
 
 ```text
-Usuário
+UsuÃ¡rio
    |
    v
-Aplicação Django
-   ├── Django ORM -> PostgreSQL no Supabase
-   └── serviço backend-only -> Storage privado no Supabase
+AplicaÃ§Ã£o Django
+   â”œâ”€â”€ Django ORM -> PostgreSQL no Supabase
+   â””â”€â”€ serviÃ§o backend-only -> Storage privado no Supabase
 ```
 
 Responsabilidades:
@@ -43,233 +43,233 @@ Responsabilidades:
 ### Django
 
 - interface web;
-- autenticação;
-- regras de negócio;
-- validações;
+- autenticaÃ§Ã£o;
+- regras de negÃ³cio;
+- validaÃ§Ãµes;
 - cadastro;
 - pesquisa;
 - dashboard;
-- relatórios;
+- relatÃ³rios;
 - acesso ao banco.
 
 ### Supabase
 
 - hospedagem do PostgreSQL;
 - Storage privado acessado exclusivamente pelo backend Django;
-- conexão segura;
-- administração do banco;
+- conexÃ£o segura;
+- administraÃ§Ã£o do banco;
 - recursos de backup conforme o plano utilizado.
 
-O projeto não utiliza Supabase Auth ou Realtime. Segredos, caminhos internos e
-operações privilegiadas do Storage permanecem no backend; o navegador recebe
-somente URLs assinadas de curta duração após autenticação e validação de ownership.
+O projeto nÃ£o utiliza Supabase Auth ou Realtime. Segredos, caminhos internos e
+operaÃ§Ãµes privilegiadas do Storage permanecem no backend; o navegador recebe
+somente URLs assinadas de curta duraÃ§Ã£o apÃ³s autenticaÃ§Ã£o e validaÃ§Ã£o de ownership.
 
 ---
 
-## Estrutura do Repositório
+## Estrutura do RepositÃ³rio
 
 ```text
 ProjetoClientes/
-├── AGENTS.md
-├── README.md
-├── .gitignore
-├── .env.example
-├── pyproject.toml
-├── Blueprint/
-│   ├── 00-overview/
-│   ├── 01-requisitos/
-│   ├── 02-modelagem/
-│   ├── 03-ui-ux/
-│   ├── 04-implementacao/
-│   ├── 05-testes/
-│   └── 06-deploy/
-├── backend/
-├── frontend/
-├── infrastructure/
-├── media/
-├── requirements/
-├── scripts/
-├── static/
-└── tests/
+â”œâ”€â”€ AGENTS.md
+â”œâ”€â”€ README.md
+â”œâ”€â”€ .gitignore
+â”œâ”€â”€ .env.example
+â”œâ”€â”€ pyproject.toml
+â”œâ”€â”€ Blueprint/
+â”‚   â”œâ”€â”€ 00-overview/
+â”‚   â”œâ”€â”€ 01-requisitos/
+â”‚   â”œâ”€â”€ 02-modelagem/
+â”‚   â”œâ”€â”€ 03-ui-ux/
+â”‚   â”œâ”€â”€ 04-implementacao/
+â”‚   â”œâ”€â”€ 05-testes/
+â”‚   â””â”€â”€ 06-deploy/
+â”œâ”€â”€ backend/
+â”œâ”€â”€ frontend/
+â”œâ”€â”€ infrastructure/
+â”œâ”€â”€ media/
+â”œâ”€â”€ requirements/
+â”œâ”€â”€ scripts/
+â”œâ”€â”€ static/
+â””â”€â”€ tests/
 ```
 
-A organização modular atual do backend é:
+A organizaÃ§Ã£o modular atual do backend Ã©:
 
 ```text
 backend/
-├── config/
-│   ├── settings.py
-│   ├── urls.py
-│   ├── supabase.py
-│   ├── models.py              # ProtectedFile temporariamente
-│   └── migrations/
-├── core/
-│   ├── apps.py
-│   ├── models.py              # abstrações compartilhadas
-│   ├── normalizers.py
-│   ├── migrations/            # sem migration concreta
-│   └── tests/
-├── usuarios/
-│   ├── models.py              # usuarios.Usuario
-│   ├── permissions.py
-│   ├── urls.py
-│   ├── templates/
-│   ├── migrations/
-│   └── tests.py
-└── clientes/
-    ├── apps.py
-    ├── models.py              # sem Cliente nesta fase
-    ├── urls.py                # namespace reservado, não incluído ainda
-    ├── migrations/            # sem migration concreta
-    └── tests/
+â”œâ”€â”€ config/
+â”‚   â”œâ”€â”€ settings.py
+â”‚   â”œâ”€â”€ urls.py
+â”‚   â”œâ”€â”€ supabase.py
+â”‚   â”œâ”€â”€ models.py              # ProtectedFile temporariamente
+â”‚   â””â”€â”€ migrations/
+â”œâ”€â”€ core/
+â”‚   â”œâ”€â”€ apps.py
+â”‚   â”œâ”€â”€ models.py              # abstraÃ§Ãµes compartilhadas
+â”‚   â”œâ”€â”€ normalizers.py
+â”‚   â”œâ”€â”€ migrations/            # sem migration concreta
+â”‚   â””â”€â”€ tests/
+â”œâ”€â”€ usuarios/
+â”‚   â”œâ”€â”€ models.py              # usuarios.Usuario
+â”‚   â”œâ”€â”€ permissions.py
+â”‚   â”œâ”€â”€ urls.py
+â”‚   â”œâ”€â”€ templates/
+â”‚   â”œâ”€â”€ migrations/
+â”‚   â””â”€â”€ tests.py
+â””â”€â”€ clientes/
+    â”œâ”€â”€ apps.py
+    â”œâ”€â”€ models.py              # sem Cliente nesta fase
+    â”œâ”€â”€ urls.py                # namespace reservado, nÃ£o incluÃ­do ainda
+    â”œâ”€â”€ migrations/            # sem migration concreta
+    â””â”€â”€ tests/
 ```
 
 Responsabilidades atuais:
 
-- `config`: configuração do projeto, composição de URLs e infraestrutura Supabase;
-- `core`: abstrações e normalizadores realmente compartilhados, sem regras de domínio;
-- `usuarios`: identidade, autenticação por e-mail, perfil, Admin e ownership;
-- `clientes`: limite do futuro domínio PF/PJ, estruturado sem modelo ou rotas concretas.
+- `config`: configuraÃ§Ã£o do projeto, composiÃ§Ã£o de URLs e infraestrutura Supabase;
+- `core`: abstraÃ§Ãµes e normalizadores realmente compartilhados, sem regras de domÃ­nio;
+- `usuarios`: identidade, autenticaÃ§Ã£o por e-mail, perfil, Admin e ownership;
+- `clientes`: limite do futuro domÃ­nio PF/PJ, estruturado sem modelo ou rotas concretas.
 
 `ProtectedFile` permanece temporariamente em `config`, com tabela, migrations,
-ownership e fluxo de Storage inalterados. A criação de uma app `arquivos` está
-adiada até que o vínculo e o ciclo de vida dos arquivos de clientes sejam definidos.
+ownership e fluxo de Storage inalterados. A criaÃ§Ã£o de uma app `arquivos` estÃ¡
+adiada atÃ© que o vÃ­nculo e o ciclo de vida dos arquivos de clientes sejam definidos.
 
-### Domínio de clientes — Fase 2.3
+### DomÃ­nio de clientes â€” Fase 2.3
 
-O backend possui agora uma entidade única `clientes.Cliente` para Pessoa Física e
-Pessoa Jurídica. O modelo herda UUID e timestamps de `core.UUIDTimestampedModel`,
-mantém endereço e contato principal integrados e registra autoria por
+O backend possui agora uma entidade Ãºnica `clientes.Cliente` para Pessoa FÃ­sica e
+Pessoa JurÃ­dica. O modelo herda UUID e timestamps de `core.UUIDTimestampedModel`,
+mantÃ©m endereÃ§o e contato principal integrados e registra autoria por
 `settings.AUTH_USER_MODEL`.
 
 Regras implementadas no backend:
 
-- choices de tipo (`PF`/`PJ`), situação (`ATIVO`/`INATIVO`) e 27 UFs;
-- normalização idempotente de nome, documento, telefone, CEP, e-mail e endereço;
-- validação de CPF, CNPJ, coerência entre tipo e documento, telefone, CEP, UF,
-  data não futura e nome útil;
-- documento globalmente único com mensagem genérica, sem revelar outro cadastro;
-- constraints de tipo, situação e comprimentos críticos, além de índices de busca,
+- choices de tipo (`PF`/`PJ`), situaÃ§Ã£o (`ATIVO`/`INATIVO`) e 27 UFs;
+- normalizaÃ§Ã£o idempotente de nome, documento, telefone, CEP, e-mail e endereÃ§o;
+- validaÃ§Ã£o de CPF, CNPJ, coerÃªncia entre tipo e documento, telefone, CEP, UF,
+  data nÃ£o futura e nome Ãºtil;
+- documento globalmente Ãºnico com mensagem genÃ©rica, sem revelar outro cadastro;
+- constraints de tipo, situaÃ§Ã£o e comprimentos crÃ­ticos, alÃ©m de Ã­ndices de busca,
   filtro, localidade e auditoria;
 - autoria com `criado_por=PROTECT` e `atualizado_por=SET_NULL`;
-- alertas não bloqueantes de telefone e e-mail repetidos, limitados ao ownership do
-  usuário comum e globais somente para administradores;
-- Admin com documento mascarado na lista, autoria protegida e ações de ativação e
-  inativação.
+- alertas nÃ£o bloqueantes de telefone e e-mail repetidos, limitados ao ownership do
+  usuÃ¡rio comum e globais somente para administradores;
+- Admin com documento mascarado na lista, autoria protegida e aÃ§Ãµes de ativaÃ§Ã£o e
+  inativaÃ§Ã£o.
 
 A migration `clientes/0001_initial.py` foi inicialmente validada no banco de teste
 isolado e depois aplicada de forma controlada ao Supabase de desenvolvimento,
 conforme registrado na etapa seguinte.
 
-### Migrations, autenticação integrada e cadastro — Fases 2.4 a 2.6
+### Migrations, autenticaÃ§Ã£o integrada e cadastro â€” Fases 2.4 a 2.6
 
 Em 22/07/2026, as migrations iniciais de Django, `usuarios`, `clientes` e `config`
 foram aplicadas ao projeto Supabase explicitamente confirmado como ambiente de
-desenvolvimento vazio e descartável. O plano posterior não possui operações
-pendentes; tabelas, constraints, índices e acesso pelo ORM foram verificados sem
+desenvolvimento vazio e descartÃ¡vel. O plano posterior nÃ£o possui operaÃ§Ãµes
+pendentes; tabelas, constraints, Ã­ndices e acesso pelo ORM foram verificados sem
 persistir dados de smoke test.
 
-O destino temporário após login é `clientes:list`. Redirecionamentos por `next`
+O destino temporÃ¡rio apÃ³s login Ã© `clientes:list`. Redirecionamentos por `next`
 aceitam somente destinos locais validados; logout continua exclusivamente por POST
-com CSRF. Páginas internas com dados pessoais retornam `Cache-Control: private,
+com CSRF. PÃ¡ginas internas com dados pessoais retornam `Cache-Control: private,
 no-store`.
 
 Rotas do fluxo inicial:
 
-- `GET /clientes/` — lista paginada e restrita por ownership;
-- `GET|POST /clientes/novo/` — cadastro único PF/PJ;
-- `GET /clientes/<uuid>/` — detalhes autorizados;
-- `GET|POST /clientes/<uuid>/editar/` — edição autorizada;
-- `POST /clientes/<uuid>/ativar/` — ativação idempotente;
-- `POST /clientes/<uuid>/inativar/` — inativação idempotente.
+- `GET /clientes/` â€” lista paginada e restrita por ownership;
+- `GET|POST /clientes/novo/` â€” cadastro Ãºnico PF/PJ;
+- `GET /clientes/<uuid>/` â€” detalhes autorizados;
+- `GET|POST /clientes/<uuid>/editar/` â€” ediÃ§Ã£o autorizada;
+- `POST /clientes/<uuid>/ativar/` â€” ativaÃ§Ã£o idempotente;
+- `POST /clientes/<uuid>/inativar/` â€” inativaÃ§Ã£o idempotente.
 
-Usuários comuns acessam somente clientes em que são `criado_por`; administradores
-acessam todos. A busca por objeto ocorre sempre no queryset já limitado, portanto
-acesso cruzado retorna 404. Documento duplicado bloqueia com mensagem genérica.
-Telefone e e-mail repetidos exigem confirmação explícita em segundo POST; a
-confirmação é assinada, expira e deixa de valer quando os valores mudam.
+UsuÃ¡rios comuns acessam somente clientes em que sÃ£o `criado_por`; administradores
+acessam todos. A busca por objeto ocorre sempre no queryset jÃ¡ limitado, portanto
+acesso cruzado retorna 404. Documento duplicado bloqueia com mensagem genÃ©rica.
+Telefone e e-mail repetidos exigem confirmaÃ§Ã£o explÃ­cita em segundo POST; a
+confirmaÃ§Ã£o Ã© assinada, expira e deixa de valer quando os valores mudam.
 
-O primeiro superusuário ainda deve ser criado manualmente, com senha interativa:
+O primeiro superusuÃ¡rio ainda deve ser criado manualmente, com senha interativa:
 
 ```powershell
 .\.venv\Scripts\python.exe backend\manage.py createsuperuser --email EMAIL_DO_ADMINISTRADOR
 ```
 
-Não coloque a senha no comando, em arquivo ou no histórico compartilhado.
+NÃ£o coloque a senha no comando, em arquivo ou no histÃ³rico compartilhado.
 
 ---
 
 ## Blueprint
 
-A pasta `Blueprint/` contém a documentação funcional e técnica do projeto.
+A pasta `Blueprint/` contÃ©m a documentaÃ§Ã£o funcional e tÃ©cnica do projeto.
 
-Ela deve ser consultada antes da implementação de cada módulo.
+Ela deve ser consultada antes da implementaÃ§Ã£o de cada mÃ³dulo.
 
 ### Overview
 
 ```text
 Blueprint/00-overview/
-├── overview_roadmap_projeto_clientes.md
-└── relatorio_definicao_projeto_cadastro_clientes.md
+â”œâ”€â”€ overview_roadmap_projeto_clientes.md
+â””â”€â”€ relatorio_definicao_projeto_cadastro_clientes.md
 ```
 
-Contém:
+ContÃ©m:
 
-- visão geral;
+- visÃ£o geral;
 - escopo;
 - roadmap;
-- arquitetura de alto nível;
+- arquitetura de alto nÃ­vel;
 - riscos;
-- critérios iniciais.
+- critÃ©rios iniciais.
 
 ### Requisitos
 
 ```text
 Blueprint/01-requisitos/
-├── campocadastroskill.md
-├── comportamento_dinamico_interface_skill.md
-├── dashboard_clientes_skill.md
-├── pesquisa_clientes_skill.md
-└── relatorios_clientes_skill.md
+â”œâ”€â”€ campocadastroskill.md
+â”œâ”€â”€ comportamento_dinamico_interface_skill.md
+â”œâ”€â”€ dashboard_clientes_skill.md
+â”œâ”€â”€ pesquisa_clientes_skill.md
+â””â”€â”€ relatorios_clientes_skill.md
 ```
 
-Contém:
+ContÃ©m:
 
 - campos;
 - regras;
-- comportamento do formulário;
+- comportamento do formulÃ¡rio;
 - pesquisa;
 - dashboard;
-- relatórios;
-- exportações.
+- relatÃ³rios;
+- exportaÃ§Ãµes.
 
 ### Modelagem
 
 ```text
 Blueprint/02-modelagem/
-└── modelagem_dados_clientes_skill.md
+â””â”€â”€ modelagem_dados_clientes_skill.md
 ```
 
-Contém:
+ContÃ©m:
 
 - entidade Cliente;
 - UML;
 - modelo entidade-relacionamento;
 - tipos de dados;
-- índices;
+- Ã­ndices;
 - constraints;
-- esboço de `models.py`.
+- esboÃ§o de `models.py`.
 
-### Interface e Navegação
+### Interface e NavegaÃ§Ã£o
 
 ```text
 Blueprint/03-ui-ux/
-└── wireframes_navegacao_skill.md
+â””â”€â”€ wireframes_navegacao_skill.md
 ```
 
-Contém:
+ContÃ©m:
 
-- mapa de navegação;
+- mapa de navegaÃ§Ã£o;
 - wireframes;
 - layout;
 - responsividade;
@@ -280,43 +280,43 @@ Contém:
 
 ## Escopo do MVP
 
-O MVP deverá incluir:
+O MVP deverÃ¡ incluir:
 
 1. projeto Django configurado;
-2. conexão com PostgreSQL do Supabase;
+2. conexÃ£o com PostgreSQL do Supabase;
 3. login;
-4. proteção das páginas internas;
+4. proteÃ§Ã£o das pÃ¡ginas internas;
 5. cadastro PF;
 6. cadastro PJ;
-7. validação de CPF e CNPJ;
-8. documento único;
-9. edição;
+7. validaÃ§Ã£o de CPF e CNPJ;
+8. documento Ãºnico;
+9. ediÃ§Ã£o;
 10. detalhes;
 11. pesquisa;
-12. ativação e inativação;
+12. ativaÃ§Ã£o e inativaÃ§Ã£o;
 13. dashboard;
-14. relatórios;
-15. exportações;
+14. relatÃ³rios;
+15. exportaÃ§Ãµes;
 16. testes;
 17. ambientes separados;
-18. publicação.
+18. publicaÃ§Ã£o.
 
 ---
 
 ## Regras Principais
 
-### Pessoa Física
+### Pessoa FÃ­sica
 
-Campos obrigatórios:
+Campos obrigatÃ³rios:
 
 - nome completo;
 - CPF;
 - telefone principal;
 - CEP.
 
-### Pessoa Jurídica
+### Pessoa JurÃ­dica
 
-Campos obrigatórios:
+Campos obrigatÃ³rios:
 
 - nome empresarial;
 - CNPJ;
@@ -325,17 +325,17 @@ Campos obrigatórios:
 
 ### Documento
 
-- CPF ou CNPJ obrigatório;
-- documento único;
-- validação dos dígitos verificadores;
-- armazenamento apenas com números;
-- máscara aplicada apenas na interface.
+- CPF ou CNPJ obrigatÃ³rio;
+- documento Ãºnico;
+- validaÃ§Ã£o dos dÃ­gitos verificadores;
+- armazenamento apenas com nÃºmeros;
+- mÃ¡scara aplicada apenas na interface.
 
-### Situação
+### SituaÃ§Ã£o
 
 - novos clientes iniciam como ativos;
 - clientes podem ser inativados;
-- exclusão definitiva não será a operação principal.
+- exclusÃ£o definitiva nÃ£o serÃ¡ a operaÃ§Ã£o principal.
 
 ### Duplicidades
 
@@ -348,7 +348,7 @@ Campos obrigatórios:
 
 ## Modelo de Dados
 
-PF e PJ utilizarão a mesma entidade:
+PF e PJ utilizarÃ£o a mesma entidade:
 
 ```text
 Cliente
@@ -379,29 +379,29 @@ criado_por
 atualizado_por
 ```
 
-A chave primária prevista é UUID.
+A chave primÃ¡ria prevista Ã© UUID.
 
 ---
 
 ## Ambientes
 
-O projeto terá três ambientes.
+O projeto terÃ¡ trÃªs ambientes.
 
 ### Desenvolvimento
 
-- execução local;
-- dados fictícios;
-- depuração habilitada;
-- banco próprio.
+- execuÃ§Ã£o local;
+- dados fictÃ­cios;
+- depuraÃ§Ã£o habilitada;
+- banco prÃ³prio.
 
-### QA ou Homologação
+### QA ou HomologaÃ§Ã£o
 
-- configuração semelhante à produção;
+- configuraÃ§Ã£o semelhante Ã  produÃ§Ã£o;
 - dados de teste;
-- validação antes da publicação;
+- validaÃ§Ã£o antes da publicaÃ§Ã£o;
 - banco separado.
 
-### Produção
+### ProduÃ§Ã£o
 
 - dados reais;
 - `DEBUG=False`;
@@ -409,7 +409,7 @@ O projeto terá três ambientes.
 - backups;
 - logs;
 - banco exclusivo;
-- credenciais próprias.
+- credenciais prÃ³prias.
 
 ---
 
@@ -427,15 +427,15 @@ Tecnologias previstas:
 - JavaScript;
 - Git.
 
-As versões e dependências serão definidas durante o setup técnico.
+As versÃµes e dependÃªncias serÃ£o definidas durante o setup tÃ©cnico.
 
 ---
 
 ## Setup
 
-O setup será realizado de forma incremental.
+O setup serÃ¡ realizado de forma incremental.
 
-Sequência prevista:
+SequÃªncia prevista:
 
 ```text
 1. Verificar Python
@@ -444,20 +444,20 @@ Sequência prevista:
 4. Criar projeto
 5. Criar apps
 6. Configurar Git
-7. Configurar variáveis de ambiente
+7. Configurar variÃ¡veis de ambiente
 8. Configurar Supabase
 9. Executar migrations
-10. Criar superusuário
-11. Validar conexão
+10. Criar superusuÃ¡rio
+11. Validar conexÃ£o
 ```
 
-Os comandos serão adicionados a este README quando o setup estiver concluído.
+Os comandos serÃ£o adicionados a este README quando o setup estiver concluÃ­do.
 
 ---
 
 ## Comandos
 
-Esta seção será atualizada após a definição das versões e dependências.
+Esta seÃ§Ã£o serÃ¡ atualizada apÃ³s a definiÃ§Ã£o das versÃµes e dependÃªncias.
 
 Exemplos esperados:
 
@@ -471,11 +471,11 @@ python backend\manage.py migrate
 
 ---
 
-## Variáveis de Ambiente
+## VariÃ¡veis de Ambiente
 
-O projeto utilizará um arquivo `.env`, que não deverá ser versionado.
+O projeto utilizarÃ¡ um arquivo `.env`, que nÃ£o deverÃ¡ ser versionado.
 
-Um arquivo `.env.example` deverá documentar as variáveis necessárias.
+Um arquivo `.env.example` deverÃ¡ documentar as variÃ¡veis necessÃ¡rias.
 
 Exemplo inicial:
 
@@ -486,31 +486,31 @@ DJANGO_ALLOWED_HOSTS=
 DATABASE_URL=
 ```
 
-Nunca inclua credenciais reais no repositório.
+Nunca inclua credenciais reais no repositÃ³rio.
 
 ---
 
-## Segurança e Privacidade
+## SeguranÃ§a e Privacidade
 
 Diretrizes:
 
-- autenticação obrigatória;
-- segredos fora do código;
+- autenticaÃ§Ã£o obrigatÃ³ria;
+- segredos fora do cÃ³digo;
 - documentos mascarados em listagens;
-- validação no backend;
-- conexão segura com PostgreSQL;
+- validaÃ§Ã£o no backend;
+- conexÃ£o segura com PostgreSQL;
 - dados reais separados dos ambientes de teste;
-- coleta apenas dos dados necessários;
-- proteção de informações pessoais;
-- preferência por inativação em vez de exclusão.
+- coleta apenas dos dados necessÃ¡rios;
+- proteÃ§Ã£o de informaÃ§Ãµes pessoais;
+- preferÃªncia por inativaÃ§Ã£o em vez de exclusÃ£o.
 
 ---
 
 ## Desenvolvimento com Agentes
 
-O projeto será desenvolvido com apoio do Antigravity e do Codex.
+O projeto serÃ¡ desenvolvido com apoio do Antigravity e do Codex.
 
-Antes de editar código, o agente deve ler:
+Antes de editar cÃ³digo, o agente deve ler:
 
 ```text
 AGENTS.md
@@ -520,10 +520,10 @@ O `AGENTS.md` define:
 
 - regras do projeto;
 - fonte de verdade;
-- convenções;
-- validações;
+- convenÃ§Ãµes;
+- validaÃ§Ãµes;
 - testes;
-- segurança;
+- seguranÃ§a;
 - comportamento esperado dos agentes.
 
 ---
@@ -531,56 +531,61 @@ O `AGENTS.md` define:
 ## Roadmap
 
 ```text
-Planejamento              Concluído
-Campos e validações       Concluído
-Pesquisa                  Concluído
-Relatórios                Concluído
-Dashboard                 Concluído
-Wireframes                Concluído
-Modelagem de dados        Concluído
-Setup técnico             Concluído
-Autenticação              Concluído
-Estrutura modular         Concluído
+Planejamento              ConcluÃ­do
+Campos e validaÃ§Ãµes       ConcluÃ­do
+Pesquisa                  ConcluÃ­do
+RelatÃ³rios                ConcluÃ­do
+Dashboard                 ConcluÃ­do
+Wireframes                ConcluÃ­do
+Modelagem de dados        ConcluÃ­do
+Setup tÃ©cnico             ConcluÃ­do
+AutenticaÃ§Ã£o              ConcluÃ­do
+Estrutura modular         ConcluÃ­do
 Cadastro                  Pendente
 Pesquisa implementada     Pendente
 Dashboard implementado    Pendente
-Relatórios implementados  Pendente
+RelatÃ³rios implementados  Pendente
 Testes                    Pendente
 QA                        Pendente
-Produção                  Pendente
+ProduÃ§Ã£o                  Pendente
 ```
 
 ---
 
 ## Testes
 
-A estratégia deverá cobrir:
+A estratÃ©gia deverÃ¡ cobrir:
 
 - modelos;
 - validadores;
-- formulários;
-- autenticação;
-- permissões;
+- formulÃ¡rios;
+- autenticaÃ§Ã£o;
+- permissÃµes;
 - cadastro;
-- edição;
+- ediÃ§Ã£o;
 - pesquisa;
 - filtros;
 - dashboard;
-- relatórios;
-- exportações.
+- relatÃ³rios;
+- exportaÃ§Ãµes.
 
-Os comandos e ferramentas serão definidos no setup.
+Os comandos e ferramentas serÃ£o definidos no setup.
 
 ---
 
 ## Status Atual
 
-As migrations iniciais estão aplicadas no Supabase de desenvolvimento. A
-autenticação Django está integrada à lista de clientes e o fluxo inicial de cadastro,
-detalhes, edição, ativação e inativação está implementado com ownership e testes.
+### Fase final — implementação inicial
 
-Próxima etapa:
+Pesquisa, dashboard, relatórios e exports CSV/XLSX/PDF estão implementados no backend. A aplicação possui health checks, WhiteNoise, container e workflow CI; QA e produção continuam condicionados aos recursos e aprovações operacionais descritos em `docs/`.
+
+As migrations iniciais estÃ£o aplicadas no Supabase de desenvolvimento. A
+autenticaÃ§Ã£o Django estÃ¡ integrada Ã  lista de clientes e o fluxo inicial de cadastro,
+detalhes, ediÃ§Ã£o, ativaÃ§Ã£o e inativaÃ§Ã£o estÃ¡ implementado com ownership e testes.
+
+PrÃ³xima etapa:
 
 ```text
-Fase 2.7 — pesquisa e filtros de clientes
+Fase 2.7 â€” pesquisa e filtros de clientes
 ```
+

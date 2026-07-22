@@ -2,21 +2,22 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
+  {% load static %}
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
-  <title>{% block title %}Clientes{% endblock %} · PC-DJANGO-001</title>
+  <title>{% block title %}Clientes{% endblock %} Â· PC-DJANGO-001</title>
   <link rel="stylesheet" href="{% static 'core/app.css' %}">
   {% block extra_head %}{% endblock %}
 </head>
 <body>
   {% if user.is_authenticated %}
     <header class="topbar">
-      <a class="brand" href="{% url 'clientes:list' %}">PC-DJANGO-001</a>
+      <a class="brand" href="{% url 'dashboard:index' %}">PC-DJANGO-001</a>
       <details class="nav-menu">
         <summary>Menu</summary>
-        <nav aria-label="Navegação principal">
-          <a href="{% url 'clientes:list' %}">Clientes</a>
+        <nav aria-label="NavegaÃ§Ã£o principal">
+          <a href="{% url 'dashboard:index' %}">Dashboard</a><a href="{% url 'clientes:list' %}">Clientes</a><a href="{% url 'relatorios:index' %}">Relatórios</a>
           <a href="{% url 'clientes:create' %}">Novo cliente</a>
           <a href="{% url 'usuarios:perfil' %}">Perfil</a>
           <form method="post" action="{% url 'usuarios:logout' %}">
@@ -25,8 +26,8 @@
           </form>
         </nav>
       </details>
-      <nav class="desktop-nav" aria-label="Navegação principal">
-        <a href="{% url 'clientes:list' %}">Clientes</a>
+      <nav class="desktop-nav" aria-label="NavegaÃ§Ã£o principal">
+        <a href="{% url 'dashboard:index' %}">Dashboard</a><a href="{% url 'clientes:list' %}">Clientes</a><a href="{% url 'relatorios:index' %}">Relatórios</a>
         <a href="{% url 'clientes:create' %}">Novo cliente</a>
         <a href="{% url 'usuarios:perfil' %}">Perfil</a>
         <form method="post" action="{% url 'usuarios:logout' %}">
@@ -39,9 +40,9 @@
 
   <main class="page-shell" id="conteudo">
     {% if user.is_authenticated %}
-      <p class="session-user">Sessão: {{ user.nome_completo }}</p>
+      <p class="session-user">SessÃ£o: {{ user.nome_completo }}</p>
     {% endif %}
-    <nav class="breadcrumb" aria-label="Navegação estrutural">
+    <nav class="breadcrumb" aria-label="NavegaÃ§Ã£o estrutural">
       {% block breadcrumb %}{% endblock %}
     </nav>
     {% if messages %}
@@ -56,3 +57,4 @@
   {% block scripts %}{% endblock %}
 </body>
 </html>
+

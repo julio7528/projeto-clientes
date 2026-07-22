@@ -255,3 +255,4 @@ class ProtectedApiTests(TestCase):
         authenticated = self.client.get(reverse("protected-profile"))
         self.assertEqual(authenticated.status_code, 200)
         self.assert_no_secret_values(authenticated)
+

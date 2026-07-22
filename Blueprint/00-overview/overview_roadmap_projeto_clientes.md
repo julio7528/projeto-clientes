@@ -6,61 +6,61 @@ Este arquivo funciona como o documento centralizador do projeto.
 
 Ele apresenta:
 
-- a visão geral do sistema;
+- a visÃ£o geral do sistema;
 - o objetivo do projeto;
-- a sequência das etapas;
-- a função de cada arquivo Markdown criado;
-- a relação entre os documentos;
+- a sequÃªncia das etapas;
+- a funÃ§Ã£o de cada arquivo Markdown criado;
+- a relaÃ§Ã£o entre os documentos;
 - o ponto atual do projeto;
-- os próximos passos.
+- os prÃ³ximos passos.
 
-Este documento não substitui os arquivos detalhados. Quando for necessário consultar regras, campos, comportamentos ou critérios específicos, deverá ser utilizado o arquivo correspondente.
+Este documento nÃ£o substitui os arquivos detalhados. Quando for necessÃ¡rio consultar regras, campos, comportamentos ou critÃ©rios especÃ­ficos, deverÃ¡ ser utilizado o arquivo correspondente.
 
 ---
 
-## 2. Visão Geral do Projeto
+## 2. VisÃ£o Geral do Projeto
 
-O projeto consiste no desenvolvimento de um sistema web para cadastro, consulta, edição, pesquisa, análise e geração de relatórios de clientes.
+O projeto consiste no desenvolvimento de um sistema web para cadastro, consulta, ediÃ§Ã£o, pesquisa, anÃ¡lise e geraÃ§Ã£o de relatÃ³rios de clientes.
 
-O sistema atenderá:
+O sistema atenderÃ¡:
 
-- clientes Pessoa Física;
-- clientes Pessoa Jurídica;
+- clientes Pessoa FÃ­sica;
+- clientes Pessoa JurÃ­dica;
 - uso inicialmente individual;
-- autenticação por login;
-- cadastro e edição;
+- autenticaÃ§Ã£o por login;
+- cadastro e ediÃ§Ã£o;
 - pesquisa;
 - dashboard;
-- relatórios;
-- proteção e privacidade dos dados;
+- relatÃ³rios;
+- proteÃ§Ã£o e privacidade dos dados;
 - banco de dados PostgreSQL hospedado no Supabase;
-- aplicação desenvolvida em Django.
+- aplicaÃ§Ã£o desenvolvida em Django.
 
-A divisão principal será:
+A divisÃ£o principal serÃ¡:
 
 ```text
 Django
-├── interface
-├── autenticação
-├── regras de negócio
-├── validações
-├── cadastro
-├── pesquisa
-├── dashboard
-├── relatórios
-└── acesso ao banco
+â”œâ”€â”€ interface
+â”œâ”€â”€ autenticaÃ§Ã£o
+â”œâ”€â”€ regras de negÃ³cio
+â”œâ”€â”€ validaÃ§Ãµes
+â”œâ”€â”€ cadastro
+â”œâ”€â”€ pesquisa
+â”œâ”€â”€ dashboard
+â”œâ”€â”€ relatÃ³rios
+â””â”€â”€ acesso ao banco
 
 Supabase
-└── banco de dados PostgreSQL
+â””â”€â”€ banco de dados PostgreSQL
 ```
 
 ---
 
 ## 3. Objetivo do Sistema
 
-O sistema deverá ser a base central de consulta e gestão de contatos e clientes.
+O sistema deverÃ¡ ser a base central de consulta e gestÃ£o de contatos e clientes.
 
-Ele deverá permitir:
+Ele deverÃ¡ permitir:
 
 - cadastrar clientes;
 - diferenciar PF e PJ;
@@ -69,95 +69,95 @@ Ele deverá permitir:
 - atualizar dados;
 - ativar e inativar registros;
 - acompanhar indicadores;
-- gerar relatórios;
-- proteger os dados conforme boas práticas de privacidade;
-- evoluir futuramente para novos módulos e usuários.
+- gerar relatÃ³rios;
+- proteger os dados conforme boas prÃ¡ticas de privacidade;
+- evoluir futuramente para novos mÃ³dulos e usuÃ¡rios.
 
 ---
 
-## 4. Escopo da Primeira Versão
+## 4. Escopo da Primeira VersÃ£o
 
-A primeira versão contempla:
+A primeira versÃ£o contempla:
 
 1. tela de login;
 2. dashboard;
 3. cadastro de clientes;
-4. edição;
-5. visualização de detalhes;
+4. ediÃ§Ã£o;
+5. visualizaÃ§Ã£o de detalhes;
 6. pesquisa;
 7. filtros;
-8. ativação e inativação;
-9. relatórios;
-10. exportações;
-11. validação de CPF e CNPJ;
-12. integração com Supabase;
-13. separação de ambientes;
+8. ativaÃ§Ã£o e inativaÃ§Ã£o;
+9. relatÃ³rios;
+10. exportaÃ§Ãµes;
+11. validaÃ§Ã£o de CPF e CNPJ;
+12. integraÃ§Ã£o com Supabase;
+13. separaÃ§Ã£o de ambientes;
 14. testes;
-15. publicação.
+15. publicaÃ§Ã£o.
 
 ---
 
 ## 5. Roadmap Geral
 
 ```text
-1. Definição do projeto
-2. Definição dos campos
-3. Regras de validação
-4. Comportamento dinâmico da interface
+1. DefiniÃ§Ã£o do projeto
+2. DefiniÃ§Ã£o dos campos
+3. Regras de validaÃ§Ã£o
+4. Comportamento dinÃ¢mico da interface
 5. Pesquisa de clientes
-6. Relatórios
+6. RelatÃ³rios
 7. Dashboard
-8. Wireframes e navegação
+8. Wireframes e navegaÃ§Ã£o
 9. Modelagem de dados
-10. Setup técnico
+10. Setup tÃ©cnico
 11. Arquitetura de ambientes
-12. Implementação
+12. ImplementaÃ§Ã£o
 13. Testes
-14. QA e homologação
-15. Produção
-16. Monitoramento e evolução
+14. QA e homologaÃ§Ã£o
+15. ProduÃ§Ã£o
+16. Monitoramento e evoluÃ§Ã£o
 ```
 
 ---
 
-# 6. Índice dos Arquivos do Projeto
+# 6. Ãndice dos Arquivos do Projeto
 
 ## 6.1 `relatorio_definicao_projeto_cadastro_clientes.md`
 
 ### Finalidade
 
-Documento inicial de visão e escopo do projeto.
+Documento inicial de visÃ£o e escopo do projeto.
 
 ### Assuntos tratados
 
-1. identificação do projeto;
-2. visão geral;
+1. identificaÃ§Ã£o do projeto;
+2. visÃ£o geral;
 3. objetivo do sistema;
 4. problema a ser resolvido;
-5. usuários;
+5. usuÃ¡rios;
 6. escopo funcional;
-7. regras de negócio;
+7. regras de negÃ³cio;
 8. privacidade e LGPD;
-9. requisitos não funcionais;
+9. requisitos nÃ£o funcionais;
 10. arquitetura inicial;
 11. ambientes;
 12. escopo do MVP;
 13. itens fora do escopo;
 14. premissas;
 15. riscos;
-16. critérios de aceitação;
-17. estratégia de desenvolvimento;
-18. próximas etapas.
+16. critÃ©rios de aceitaÃ§Ã£o;
+17. estratÃ©gia de desenvolvimento;
+18. prÃ³ximas etapas.
 
 ### Quando consultar
 
-Consultar quando for necessário entender:
+Consultar quando for necessÃ¡rio entender:
 
-- o propósito do sistema;
+- o propÃ³sito do sistema;
 - o escopo geral;
-- o que faz ou não parte da primeira versão;
-- os princípios do projeto;
-- a arquitetura de alto nível.
+- o que faz ou nÃ£o parte da primeira versÃ£o;
+- os princÃ­pios do projeto;
+- a arquitetura de alto nÃ­vel.
 
 ---
 
@@ -170,23 +170,23 @@ Define os campos do cadastro de clientes.
 ### Assuntos tratados
 
 1. estrutura geral;
-2. campos obrigatórios;
+2. campos obrigatÃ³rios;
 3. campos opcionais;
-4. campos automáticos;
+4. campos automÃ¡ticos;
 5. campos removidos;
-6. diferença entre PF e PJ;
-7. uso de campos únicos para nome, documento e data;
-8. decisão de usar uma única estrutura de cliente.
+6. diferenÃ§a entre PF e PJ;
+7. uso de campos Ãºnicos para nome, documento e data;
+8. decisÃ£o de usar uma Ãºnica estrutura de cliente.
 
 ### Quando consultar
 
-Consultar quando for necessário saber:
+Consultar quando for necessÃ¡rio saber:
 
 - quais campos existem;
-- quais são obrigatórios;
-- quais são opcionais;
-- como PF e PJ são representadas;
-- quais campos aparecem no formulário.
+- quais sÃ£o obrigatÃ³rios;
+- quais sÃ£o opcionais;
+- como PF e PJ sÃ£o representadas;
+- quais campos aparecem no formulÃ¡rio.
 
 ---
 
@@ -194,39 +194,39 @@ Consultar quando for necessário saber:
 
 ### Finalidade
 
-Define como o formulário reage às ações do usuário.
+Define como o formulÃ¡rio reage Ã s aÃ§Ãµes do usuÃ¡rio.
 
 ### Assuntos tratados
 
-1. seleção entre PF e PJ;
-2. alteração de rótulos;
-3. máscaras de CPF e CNPJ;
+1. seleÃ§Ã£o entre PF e PJ;
+2. alteraÃ§Ã£o de rÃ³tulos;
+3. mÃ¡scaras de CPF e CNPJ;
 4. troca de tipo de cliente;
 5. comportamento do nome;
 6. comportamento do documento;
 7. telefone;
 8. CEP;
-9. preenchimento de endereço;
+9. preenchimento de endereÃ§o;
 10. e-mail;
 11. data;
-12. situação;
-13. botão salvar;
+12. situaÃ§Ã£o;
+13. botÃ£o salvar;
 14. tratamento de erros;
 15. alertas de duplicidade;
-16. edição;
+16. ediÃ§Ã£o;
 17. responsividade;
 18. acessibilidade;
-19. fluxo do formulário.
+19. fluxo do formulÃ¡rio.
 
 ### Quando consultar
 
-Consultar quando for necessário definir:
+Consultar quando for necessÃ¡rio definir:
 
-- interação do formulário;
-- máscaras;
+- interaÃ§Ã£o do formulÃ¡rio;
+- mÃ¡scaras;
 - mensagens;
 - comportamento ao trocar PF por PJ;
-- validações visuais;
+- validaÃ§Ãµes visuais;
 - estados da interface.
 
 ---
@@ -245,27 +245,27 @@ Define a pesquisa e listagem de clientes.
 4. pesquisa por telefone;
 5. pesquisa por e-mail;
 6. filtros;
-7. ordenação;
-8. paginação;
-9. visualização dos resultados;
-10. ações por cliente;
+7. ordenaÃ§Ã£o;
+8. paginaÃ§Ã£o;
+9. visualizaÃ§Ã£o dos resultados;
+10. aÃ§Ãµes por cliente;
 11. documentos mascarados;
-12. ativação e inativação;
+12. ativaÃ§Ã£o e inativaÃ§Ã£o;
 13. estados sem resultados;
 14. responsividade;
-15. segurança;
-16. critérios de aceitação.
+15. seguranÃ§a;
+16. critÃ©rios de aceitaÃ§Ã£o.
 
 ### Quando consultar
 
-Consultar quando for necessário implementar:
+Consultar quando for necessÃ¡rio implementar:
 
 - tela de clientes;
 - filtros;
 - listagem;
-- paginação;
-- ordenação;
-- ações rápidas;
+- paginaÃ§Ã£o;
+- ordenaÃ§Ã£o;
+- aÃ§Ãµes rÃ¡pidas;
 - retorno de pesquisa.
 
 ---
@@ -274,42 +274,42 @@ Consultar quando for necessário implementar:
 
 ### Finalidade
 
-Define a área de relatórios.
+Define a Ã¡rea de relatÃ³rios.
 
 ### Assuntos tratados
 
-1. relatório geral;
-2. relatório por tipo;
-3. relatório por situação;
-4. relatório por cidade e estado;
-5. relatório por período;
-6. relatório de atualizações;
-7. relatório de cadastros incompletos;
+1. relatÃ³rio geral;
+2. relatÃ³rio por tipo;
+3. relatÃ³rio por situaÃ§Ã£o;
+4. relatÃ³rio por cidade e estado;
+5. relatÃ³rio por perÃ­odo;
+6. relatÃ³rio de atualizaÃ§Ãµes;
+7. relatÃ³rio de cadastros incompletos;
 8. filtros;
 9. tabelas;
-10. gráficos;
+10. grÃ¡ficos;
 11. resumos;
-12. ordenação;
-13. paginação;
-14. exportação CSV;
-15. exportação XLSX;
-16. exportação PDF;
-17. impressão;
+12. ordenaÃ§Ã£o;
+13. paginaÃ§Ã£o;
+14. exportaÃ§Ã£o CSV;
+15. exportaÃ§Ã£o XLSX;
+16. exportaÃ§Ã£o PDF;
+17. impressÃ£o;
 18. privacidade;
-19. segurança;
+19. seguranÃ§a;
 20. desempenho;
-21. critérios de aceitação.
+21. critÃ©rios de aceitaÃ§Ã£o.
 
 ### Quando consultar
 
-Consultar quando for necessário implementar:
+Consultar quando for necessÃ¡rio implementar:
 
-- relatórios;
-- exportações;
-- filtros analíticos;
-- gráficos;
+- relatÃ³rios;
+- exportaÃ§Ãµes;
+- filtros analÃ­ticos;
+- grÃ¡ficos;
 - resumos;
-- impressão.
+- impressÃ£o.
 
 ---
 
@@ -329,26 +329,26 @@ Define o dashboard e seus indicadores.
 6. novos clientes;
 7. cadastros incompletos;
 8. filtros;
-9. gráficos;
+9. grÃ¡ficos;
 10. rankings;
 11. clientes recentes;
 12. atalhos;
-13. interação com indicadores;
+13. interaÃ§Ã£o com indicadores;
 14. carregamento;
 15. estados vazios;
 16. privacidade;
-17. segurança;
+17. seguranÃ§a;
 18. desempenho;
 19. responsividade;
-20. critérios de aceitação.
+20. critÃ©rios de aceitaÃ§Ã£o.
 
 ### Quando consultar
 
-Consultar quando for necessário implementar:
+Consultar quando for necessÃ¡rio implementar:
 
-- página inicial;
+- pÃ¡gina inicial;
 - indicadores;
-- gráficos;
+- grÃ¡ficos;
 - filtros do dashboard;
 - atalhos;
 - resumos gerenciais.
@@ -359,22 +359,22 @@ Consultar quando for necessário implementar:
 
 ### Finalidade
 
-Define a organização visual, navegação e estrutura das telas.
+Define a organizaÃ§Ã£o visual, navegaÃ§Ã£o e estrutura das telas.
 
 ### Assuntos tratados
 
-1. arquitetura híbrida da interface;
-2. mapa de navegação;
+1. arquitetura hÃ­brida da interface;
+2. mapa de navegaÃ§Ã£o;
 3. menu;
-4. cabeçalho;
+4. cabeÃ§alho;
 5. breadcrumb;
 6. login;
 7. dashboard;
 8. pesquisa;
 9. cadastro;
-10. edição;
+10. ediÃ§Ã£o;
 11. detalhes;
-12. relatórios;
+12. relatÃ³rios;
 13. perfil;
 14. logout;
 15. componentes compartilhados;
@@ -384,20 +384,20 @@ Define a organização visual, navegação e estrutura das telas.
 19. estados vazios;
 20. responsividade;
 21. acessibilidade;
-22. padrão visual;
+22. padrÃ£o visual;
 23. fluxos principais;
-24. organização sugerida de templates;
-25. critérios de aceitação.
+24. organizaÃ§Ã£o sugerida de templates;
+25. critÃ©rios de aceitaÃ§Ã£o.
 
 ### Quando consultar
 
-Consultar quando for necessário definir:
+Consultar quando for necessÃ¡rio definir:
 
-- estrutura das páginas;
-- fluxo de navegação;
-- disposição dos elementos;
+- estrutura das pÃ¡ginas;
+- fluxo de navegaÃ§Ã£o;
+- disposiÃ§Ã£o dos elementos;
 - comportamento em desktop e mobile;
-- organização dos templates.
+- organizaÃ§Ã£o dos templates.
 
 ---
 
@@ -409,53 +409,53 @@ Define a estrutura de dados do sistema.
 
 ### Assuntos tratados
 
-1. decisões de modelagem;
+1. decisÃµes de modelagem;
 2. entidade Cliente;
-3. entidade Usuário;
+3. entidade UsuÃ¡rio;
 4. UML de classes;
 5. diagrama entidade-relacionamento;
-6. dicionário de dados;
-7. chave primária;
-8. enumerações;
+6. dicionÃ¡rio de dados;
+7. chave primÃ¡ria;
+8. enumeraÃ§Ãµes;
 9. regras de integridade;
 10. constraints;
-11. índices;
+11. Ã­ndices;
 12. relacionamentos;
 13. auditoria;
-14. estrutura lógica da tabela;
-15. esboço de `models.py`;
-16. validações;
-17. normalização;
+14. estrutura lÃ³gica da tabela;
+15. esboÃ§o de `models.py`;
+16. validaÃ§Ãµes;
+17. normalizaÃ§Ã£o;
 18. privacidade;
 19. suporte ao dashboard;
-20. suporte aos relatórios;
+20. suporte aos relatÃ³rios;
 21. pesquisa;
 22. duplicidades;
-23. exclusão e integridade;
+23. exclusÃ£o e integridade;
 24. migrations;
 25. compatibilidade com ambientes;
-26. critérios de aceitação.
+26. critÃ©rios de aceitaÃ§Ã£o.
 
 ### Quando consultar
 
-Consultar quando for necessário implementar:
+Consultar quando for necessÃ¡rio implementar:
 
 - banco de dados;
 - models do Django;
 - migrations;
 - constraints;
-- índices;
+- Ã­ndices;
 - relacionamentos;
-- validações de integridade.
+- validaÃ§Ãµes de integridade.
 
 ---
 
-# 7. Relação entre os Arquivos
+# 7. RelaÃ§Ã£o entre os Arquivos
 
-Os documentos seguem uma sequência lógica.
+Os documentos seguem uma sequÃªncia lÃ³gica.
 
 ```text
-Definição do projeto
+DefiniÃ§Ã£o do projeto
     |
     v
 Campos do cadastro
@@ -467,53 +467,53 @@ Comportamento da interface
 Pesquisa
     |
     v
-Relatórios
+RelatÃ³rios
     |
     v
 Dashboard
     |
     v
-Wireframes e navegação
+Wireframes e navegaÃ§Ã£o
     |
     v
 Modelagem de dados
     |
     v
-Setup técnico e implementação
+Setup tÃ©cnico e implementaÃ§Ã£o
 ```
 
-Cada arquivo detalha uma parte específica.
+Cada arquivo detalha uma parte especÃ­fica.
 
-O arquivo centralizador apresenta o caminho geral, mas as decisões técnicas e funcionais devem ser consultadas nos arquivos especializados.
+O arquivo centralizador apresenta o caminho geral, mas as decisÃµes tÃ©cnicas e funcionais devem ser consultadas nos arquivos especializados.
 
 ---
 
-# 8. Matriz de Consulta Rápida
+# 8. Matriz de Consulta RÃ¡pida
 
 | Necessidade | Arquivo |
 |---|---|
 | Entender o projeto | `relatorio_definicao_projeto_cadastro_clientes.md` |
 | Consultar campos | `campocadastroskill.md` |
-| Implementar comportamento do formulário | `comportamento_dinamico_interface_skill.md` |
+| Implementar comportamento do formulÃ¡rio | `comportamento_dinamico_interface_skill.md` |
 | Implementar pesquisa | `pesquisa_clientes_skill.md` |
-| Implementar relatórios | `relatorios_clientes_skill.md` |
+| Implementar relatÃ³rios | `relatorios_clientes_skill.md` |
 | Implementar dashboard | `dashboard_clientes_skill.md` |
-| Criar telas e navegação | `wireframes_navegacao_skill.md` |
+| Criar telas e navegaÃ§Ã£o | `wireframes_navegacao_skill.md` |
 | Criar banco e models | `modelagem_dados_clientes_skill.md` |
-| Entender a sequência geral | `overview_roadmap_projeto_clientes.md` |
+| Entender a sequÃªncia geral | `overview_roadmap_projeto_clientes.md` |
 
 ---
 
-# 9. Dependências entre Etapas
+# 9. DependÃªncias entre Etapas
 
 ## 9.1 Cadastro
 
 Depende de:
 
-- definição de campos;
-- comportamento dinâmico;
+- definiÃ§Ã£o de campos;
+- comportamento dinÃ¢mico;
 - modelagem de dados;
-- wireframe do formulário.
+- wireframe do formulÃ¡rio.
 
 ## 9.2 Pesquisa
 
@@ -524,14 +524,14 @@ Depende de:
 - regras de privacidade;
 - wireframe da listagem.
 
-## 9.3 Relatórios
+## 9.3 RelatÃ³rios
 
 Depende de:
 
 - modelagem;
 - pesquisa;
 - filtros;
-- regras de exportação;
+- regras de exportaÃ§Ã£o;
 - privacidade.
 
 ## 9.4 Dashboard
@@ -548,130 +548,131 @@ Depende de:
 
 Depende de:
 
-- configuração do Django;
-- autenticação;
+- configuraÃ§Ã£o do Django;
+- autenticaÃ§Ã£o;
 - templates;
-- controle de sessão.
+- controle de sessÃ£o.
 
 ---
 
 # 10. Estado Atual do Projeto
 
-As seguintes etapas estão concluídas em nível de planejamento:
+As seguintes etapas estÃ£o concluÃ­das em nÃ­vel de planejamento:
 
-- definição do projeto;
-- definição dos campos;
-- comportamento dinâmico;
-- regras de validação;
+- definiÃ§Ã£o do projeto;
+- definiÃ§Ã£o dos campos;
+- comportamento dinÃ¢mico;
+- regras de validaÃ§Ã£o;
 - pesquisa;
-- relatórios;
+- relatÃ³rios;
 - dashboard;
 - wireframes;
-- navegação;
+- navegaÃ§Ã£o;
 - modelagem de dados.
 
-O projeto está pronto para iniciar:
+O projeto estÃ¡ pronto para iniciar:
 
 ```text
-Setup Técnico e Arquitetura de Ambientes
+Setup TÃ©cnico e Arquitetura de Ambientes
 ```
 
 ---
 
-# 11. Próxima Fase
+# 11. PrÃ³xima Fase
 
-A próxima fase será conduzida manualmente e de forma interativa.
+A prÃ³xima fase serÃ¡ conduzida manualmente e de forma interativa.
 
-Ela incluirá:
+Ela incluirÃ¡:
 
 1. verificar o ambiente local;
-2. escolher a versão do Python;
+2. escolher a versÃ£o do Python;
 3. criar a pasta do projeto;
 4. criar o ambiente virtual;
 5. instalar Django;
 6. criar o projeto;
 7. criar os aplicativos;
-8. iniciar o repositório Git;
-9. definir dependências;
-10. configurar variáveis de ambiente;
+8. iniciar o repositÃ³rio Git;
+9. definir dependÃªncias;
+10. configurar variÃ¡veis de ambiente;
 11. configurar Supabase;
-12. separar desenvolvimento, QA e produção;
+12. separar desenvolvimento, QA e produÃ§Ã£o;
 13. executar a primeira migration;
-14. criar o primeiro usuário;
-15. validar a conexão.
+14. criar o primeiro usuÃ¡rio;
+15. validar a conexÃ£o.
 
-Essa etapa não precisará ser documentada em um novo arquivo Markdown a cada passo. O trabalho será realizado em conversa, seguindo uma ação por vez.
+Essa etapa nÃ£o precisarÃ¡ ser documentada em um novo arquivo Markdown a cada passo. O trabalho serÃ¡ realizado em conversa, seguindo uma aÃ§Ã£o por vez.
 
 ---
 
-# 12. Etapas Futuras de Implementação
+# 12. Etapas Futuras de ImplementaÃ§Ã£o
 
-Após o setup:
+ApÃ³s o setup:
 
 ```text
 1. Estrutura base do Django
-2. Autenticação
+2. AutenticaÃ§Ã£o
 3. Modelo Cliente
 4. Validadores
 5. Migrations
 6. Django Admin
 7. Cadastro
-8. Edição
+8. EdiÃ§Ã£o
 9. Detalhes
 10. Pesquisa
 11. Dashboard
-12. Relatórios
-13. Exportações
+12. RelatÃ³rios
+13. ExportaÃ§Ãµes
 14. Testes
 15. QA
-16. Produção
+16. ProduÃ§Ã£o
 ```
 
 ---
 
-# 13. Critério para Alterações no Projeto
+# 13. CritÃ©rio para AlteraÃ§Ãµes no Projeto
 
-Sempre que uma decisão relevante mudar, deverá ser atualizado o arquivo específico.
+Sempre que uma decisÃ£o relevante mudar, deverÃ¡ ser atualizado o arquivo especÃ­fico.
 
 Exemplos:
 
-- novo campo → `campocadastroskill.md`;
-- nova validação → `comportamento_dinamico_interface_skill.md`;
-- novo filtro → arquivo da funcionalidade correspondente;
-- nova entidade → `modelagem_dados_clientes_skill.md`;
-- nova tela → `wireframes_navegacao_skill.md`;
-- mudança de escopo → `relatorio_definicao_projeto_cadastro_clientes.md`.
+- novo campo â†’ `campocadastroskill.md`;
+- nova validaÃ§Ã£o â†’ `comportamento_dinamico_interface_skill.md`;
+- novo filtro â†’ arquivo da funcionalidade correspondente;
+- nova entidade â†’ `modelagem_dados_clientes_skill.md`;
+- nova tela â†’ `wireframes_navegacao_skill.md`;
+- mudanÃ§a de escopo â†’ `relatorio_definicao_projeto_cadastro_clientes.md`.
 
-Este arquivo centralizador deverá ser atualizado apenas quando:
+Este arquivo centralizador deverÃ¡ ser atualizado apenas quando:
 
 - um novo documento for criado;
-- uma etapa for concluída;
+- uma etapa for concluÃ­da;
 - o roadmap mudar;
 - a estrutura geral do projeto for alterada.
 
 ---
 
-# 14. Organização Sugerida dos Documentos
+# 14. OrganizaÃ§Ã£o Sugerida dos Documentos
 
 ```text
 documentacao/
-├── overview_roadmap_projeto_clientes.md
-├── relatorio_definicao_projeto_cadastro_clientes.md
-├── campocadastroskill.md
-├── comportamento_dinamico_interface_skill.md
-├── pesquisa_clientes_skill.md
-├── relatorios_clientes_skill.md
-├── dashboard_clientes_skill.md
-├── wireframes_navegacao_skill.md
-└── modelagem_dados_clientes_skill.md
+â”œâ”€â”€ overview_roadmap_projeto_clientes.md
+â”œâ”€â”€ relatorio_definicao_projeto_cadastro_clientes.md
+â”œâ”€â”€ campocadastroskill.md
+â”œâ”€â”€ comportamento_dinamico_interface_skill.md
+â”œâ”€â”€ pesquisa_clientes_skill.md
+â”œâ”€â”€ relatorios_clientes_skill.md
+â”œâ”€â”€ dashboard_clientes_skill.md
+â”œâ”€â”€ wireframes_navegacao_skill.md
+â””â”€â”€ modelagem_dados_clientes_skill.md
 ```
 
 ---
 
-# 15. Conclusão
+# 15. ConclusÃ£o
 
-O projeto já possui uma base funcional, visual e técnica suficientemente detalhada para iniciar a implementação.
+O projeto jÃ¡ possui uma base funcional, visual e tÃ©cnica suficientemente detalhada para iniciar a implementaÃ§Ã£o.
 
-Os documentos especializados definem o comportamento de cada módulo. Este arquivo funciona como o mapa principal para localizar as decisões e acompanhar a evolução do projeto.
+Os documentos especializados definem o comportamento de cada mÃ³dulo. Este arquivo funciona como o mapa principal para localizar as decisÃµes e acompanhar a evoluÃ§Ã£o do projeto.
 
-O próximo passo será iniciar o setup técnico do Django e dos ambientes, conduzido manualmente e de forma incremental.
+O prÃ³ximo passo serÃ¡ iniciar o setup tÃ©cnico do Django e dos ambientes, conduzido manualmente e de forma incremental.
+

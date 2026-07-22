@@ -19,7 +19,7 @@ db.sqlite3-journal
 media/
 staticfiles/
 
-# Variáveis de ambiente e segredos
+# VariÃ¡veis de ambiente e segredos
 .env
 .env.*
 !.env.example
@@ -43,12 +43,12 @@ htmlcov/
 Thumbs.db
 desktop.ini
 
-# Build e distribuição
+# Build e distribuiÃ§Ã£o
 build/
 dist/
 *.egg-info/
 
-# Arquivos temporários
+# Arquivos temporÃ¡rios
 *.tmp
 *.temp
 *.bak

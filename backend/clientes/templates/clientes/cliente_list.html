@@ -5,14 +5,22 @@
   <header class="page-heading">
     <div>
       <h1>Clientes</h1>
-      <p class="lede">Cadastros disponíveis para sua conta.</p>
+      <p class="lede">Cadastros disponÃ­veis para sua conta.</p>
     </div>
     <a class="button" href="{% url 'clientes:create' %}">Novo cliente</a>
   </header>
 
+  <form class="filter-panel" method="get" role="search">
+    <div class="field-grid">
+      {% for field in form %}<div class="field"><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% for error in field.errors %}<p class="field-error">{{ error }}</p>{% endfor %}</div>{% endfor %}
+    </div>
+    <button class="button" type="submit">Pesquisar</button>
+    <a class="button secondary" href="{% url 'clientes:list' %}">Limpar</a>
+  </form>
+
   {% if rows %}
     <table class="data-table">
-      <thead><tr><th>Nome</th><th>Tipo</th><th>Documento</th><th>Telefone</th><th>Localidade</th><th>Situação</th><th>Ações</th></tr></thead>
+      <thead><tr><th>Nome</th><th>Tipo</th><th>Documento</th><th>Telefone</th><th>Localidade</th><th>SituaÃ§Ã£o</th><th>AÃ§Ãµes</th></tr></thead>
       <tbody>
         {% for row in rows %}
           <tr>
@@ -20,18 +28,18 @@
             <td data-label="Tipo">{{ row.cliente.get_tipo_display }}</td>
             <td data-label="Documento">{{ row.documento }}</td>
             <td data-label="Telefone">{{ row.telefone }}</td>
-            <td data-label="Localidade">{% if row.cliente.cidade %}{{ row.cliente.cidade }}{% if row.cliente.estado %}/{{ row.cliente.estado }}{% endif %}{% else %}—{% endif %}</td>
-            <td data-label="Situação"><span class="status status-{{ row.cliente.situacao|lower }}">{{ row.cliente.get_situacao_display }}</span></td>
-            <td data-label="Ações"><a href="{% url 'clientes:detail' row.cliente.pk %}">Detalhes</a> · <a href="{% url 'clientes:update' row.cliente.pk %}">Editar</a></td>
+            <td data-label="Localidade">{% if row.cliente.cidade %}{{ row.cliente.cidade }}{% if row.cliente.estado %}/{{ row.cliente.estado }}{% endif %}{% else %}â€”{% endif %}</td>
+            <td data-label="SituaÃ§Ã£o"><span class="status status-{{ row.cliente.situacao|lower }}">{{ row.cliente.get_situacao_display }}</span></td>
+            <td data-label="AÃ§Ãµes"><a href="{% url 'clientes:detail' row.cliente.pk %}">Detalhes</a> Â· <a href="{% url 'clientes:update' row.cliente.pk %}">Editar</a></td>
           </tr>
         {% endfor %}
       </tbody>
     </table>
     {% if page.paginator.num_pages > 1 %}
-      <nav class="pagination" aria-label="Paginação">
-        {% if page.has_previous %}<a href="?page={{ page.previous_page_number }}">Anterior</a>{% endif %}
-        <span>Página {{ page.number }} de {{ page.paginator.num_pages }}</span>
-        {% if page.has_next %}<a href="?page={{ page.next_page_number }}">Próxima</a>{% endif %}
+      <nav class="pagination" aria-label="PaginaÃ§Ã£o">
+        {% if page.has_previous %}<a href="?{% if query_string %}{{ query_string }}&amp;{% endif %}page={{ page.previous_page_number }}">Anterior</a>{% endif %}
+        <span>PÃ¡gina {{ page.number }} de {{ page.paginator.num_pages }}</span>
+        {% if page.has_next %}<a href="?{% if query_string %}{{ query_string }}&amp;{% endif %}page={{ page.next_page_number }}">Próxima</a>{% endif %}
       </nav>
     {% endif %}
   {% else %}
@@ -42,3 +50,4 @@
     </div>
   {% endif %}
 {% endblock %}
+

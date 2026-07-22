@@ -34,3 +34,4 @@ class SecretRedactionFilter(logging.Filter):
         record.msg = message
         record.args = ()
         return True
+

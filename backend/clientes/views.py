@@ -14,7 +14,9 @@ from usuarios.permissions import scope_owned_queryset
 
 from .choices import SituacaoCliente, TipoCliente
 from .forms import ClienteForm
+from .filters import ClienteSearchForm
 from .models import Cliente
+from .querying import ClienteFilterSpec, apply_cliente_filters, apply_cliente_ordering
 from .services import (
     collect_duplicate_warnings,
     create_duplicate_confirmation_token,
@@ -92,7 +94,17 @@ def _duplicate_confirmation_required(
 @login_required
 @private_no_store
 def cliente_list(request: HttpRequest) -> HttpResponse:
-    paginator = Paginator(_owned_clientes(request).order_by("nome"), 20)
+    data = request.GET.copy()
+    if "situacao" not in request.GET:
+        data["situacao"] = SituacaoCliente.ATIVO
+    form = ClienteSearchForm(data)
+    queryset = _owned_clientes(request)
+    if form.is_valid():
+        spec = ClienteFilterSpec.from_cleaned_data(form.cleaned_data)
+        queryset = apply_cliente_ordering(apply_cliente_filters(queryset, spec), spec)
+    else:
+        queryset = queryset.none()
+    paginator = Paginator(queryset, 20)
     page = paginator.get_page(request.GET.get("page"))
     rows = [
         {
@@ -102,7 +114,9 @@ def cliente_list(request: HttpRequest) -> HttpResponse:
         }
         for cliente in page.object_list
     ]
-    return render(request, "clientes/cliente_list.html", {"page": page, "rows": rows})
+    query_params = request.GET.copy()
+    query_params.pop("page", None)
+    return render(request, "clientes/cliente_list.html", {"form": form, "page": page, "rows": rows, "query_string": query_params.urlencode(), "has_filters": bool(request.GET)})
 
 
 @login_required
@@ -145,7 +159,7 @@ def cliente_create(request: HttpRequest) -> HttpResponse:
     except IntegrityError:
         form.add_error(
             "documento",
-            "Já existe um cliente cadastrado com este documento.",
+            "JÃ¡ existe um cliente cadastrado com este documento.",
         )
         return _render_form(request, form=form)
     messages.success(request, "Cliente cadastrado com sucesso.")
@@ -205,7 +219,7 @@ def cliente_update(request: HttpRequest, pk: UUID) -> HttpResponse:
     except IntegrityError:
         form.add_error(
             "documento",
-            "Já existe um cliente cadastrado com este documento.",
+            "JÃ¡ existe um cliente cadastrado com este documento.",
         )
         return _render_form(request, form=form, cliente=cliente)
     messages.success(request, "Cliente atualizado com sucesso.")
@@ -247,3 +261,4 @@ def cliente_deactivate(request: HttpRequest, pk: UUID) -> HttpResponse:
         status=SituacaoCliente.INATIVO,
         success_message="Cliente inativado com sucesso.",
     )
+

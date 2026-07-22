@@ -52,11 +52,14 @@ INSTALLED_APPS = [
     'core.apps.CoreConfig',
     'usuarios.apps.UsuariosConfig',
     'clientes.apps.ClientesConfig',
+    'dashboard.apps.DashboardConfig',
+    'relatorios.apps.RelatoriosConfig',
     'config',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -86,7 +89,8 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 AUTH_USER_MODEL = "usuarios.Usuario"
 LOGIN_URL = "usuarios:login"
-LOGIN_REDIRECT_URL = "clientes:list"
+LOGIN_REDIRECT_URL = "dashboard:index"
+REPORT_EXPORT_MAX_ROWS = int_env("REPORT_EXPORT_MAX_ROWS", default=10000)
 LOGOUT_REDIRECT_URL = "usuarios:login"
 
 
@@ -147,6 +151,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STORAGES = {
+    "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
+}
 
 # Production-oriented transport and cookie security.
 SESSION_COOKIE_HTTPONLY = True
@@ -207,3 +215,4 @@ LOGGING = {
         "level": "INFO",
     },
 }
+

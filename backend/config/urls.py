@@ -23,6 +23,11 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("usuarios/", include("usuarios.urls")),
     path("clientes/", include("clientes.urls")),
+    path("dashboard/", include("dashboard.urls")),
+    path("relatorios/", include("relatorios.urls")),
+    path("health/live/", views.health_live, name="health-live"),
+    path("health/ready/", views.health_ready, name="health-ready"),
     path("api/protected/profile/", views.protected_profile, name="protected-profile"),
     path("api/storage/private-url/", views.private_storage_url, name="private-storage-url"),
 ]
+

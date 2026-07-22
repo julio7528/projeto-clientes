@@ -109,7 +109,7 @@ class AuthenticationTests(TestCase):
             {"username": self.user.email, "password": self.password},
         )
 
-        self.assertRedirects(response, reverse("clientes:list"))
+        self.assertRedirects(response, reverse("dashboard:index"))
         self.assertEqual(str(self.client.session["_auth_user_id"]), str(self.user.pk))
 
     def test_invalid_login_is_generic_and_does_not_leak_password_or_secrets(self):
@@ -170,12 +170,12 @@ class AuthenticationTests(TestCase):
                 "next": "https://attacker.example/collect",
             },
         )
-        self.assertRedirects(response, reverse("clientes:list"))
+        self.assertRedirects(response, reverse("dashboard:index"))
 
     def test_authenticated_user_is_redirected_away_from_login(self):
         self.client.force_login(self.user)
         response = self.client.get(reverse("usuarios:login"))
-        self.assertRedirects(response, reverse("clientes:list"))
+        self.assertRedirects(response, reverse("dashboard:index"))
 
     def test_profile_uses_private_no_store_headers(self):
         self.client.force_login(self.user)
@@ -303,3 +303,4 @@ class MigrationSafetyTests(TestCase):
         output = StringIO()
         call_command("makemigrations", "--check", "--dry-run", stdout=output)
         self.assertIn("No changes detected", output.getvalue())
+

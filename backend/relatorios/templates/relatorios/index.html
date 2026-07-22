@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Relatórios{% endblock %}
+{% block breadcrumb %}<span aria-current="page">Relatórios</span>{% endblock %}
+{% block content %}
+<header class="page-heading"><div><h1>Relatórios</h1><p class="lede">Resultados filtrados do seu escopo autorizado.</p></div></header>
+<form class="filter-panel" method="get"><div class="field-grid">{% for field in form %}<div class="field"><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% for error in field.errors %}<p class="field-error">{{ error }}</p>{% endfor %}</div>{% endfor %}</div><button class="button" type="submit">Gerar relatório</button></form>
+<p class="summary">{{ total }} registro(s). <a href="?{{ request.GET.urlencode }}&amp;export=csv">CSV</a> · <a href="?{{ request.GET.urlencode }}&amp;export=xlsx">XLSX</a> · <a href="?{{ request.GET.urlencode }}&amp;export=pdf">PDF</a></p>
+{% if rows %}<div class="table-wrap"><table class="data-table"><thead><tr><th>Nome</th><th>Tipo</th><th>Documento</th><th>Telefone</th><th>E-mail</th><th>Cidade</th><th>Estado</th><th>Situação</th><th>Criado em</th></tr></thead><tbody>{% for row in rows %}<tr>{% for value in row %}<td>{{ value }}</td>{% endfor %}</tr>{% endfor %}</tbody></table></div>{% else %}<div class="empty-state"><h2>Nenhum dado encontrado</h2><p>Ajuste os filtros para gerar resultados.</p></div>{% endif %}
+{% endblock %}

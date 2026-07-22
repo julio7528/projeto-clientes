@@ -36,6 +36,8 @@ permanece na tela de login; logout continua POST-only com CSRF.
 
 ## Clientes
 
+Pesquisa compartilhada em `clientes.filters`/`clientes.querying` aplica ownership antes de filtros, paginação de 20 itens e ordenação allowlist. Dashboard fica em `/dashboard/`; relatórios e exports em `/relatorios/`.
+
 Rotas autenticadas:
 
 - `GET /clientes/` (`clientes:list`);
@@ -137,3 +139,4 @@ Ainda nao existe superusuario nesse banco. Crie-o apenas de forma interativa:
 ```
 
 Nunca inclua a senha no comando.
+

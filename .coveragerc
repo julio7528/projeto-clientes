@@ -1,0 +1,13 @@
+[run]
+source = backend
+omit =
+    */migrations/*
+    */tests/*
+    */manage.py
+    */asgi.py
+    */wsgi.py
+
+[report]
+fail_under = 85
+show_missing = True
+skip_covered = True

@@ -4,7 +4,8 @@ import uuid
 from functools import wraps
 
 from django.conf import settings
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
+from django.db import connection
 from django.views.decorators.http import require_GET, require_POST
 
 from .models import ProtectedFile
@@ -12,6 +13,22 @@ from .supabase import SupabaseServiceError, create_private_storage_signed_url
 from usuarios.permissions import can_access_owned_object
 
 logger = logging.getLogger(__name__)
+
+
+@require_GET
+def health_live(request):
+    return HttpResponse("ok", content_type="text/plain")
+
+
+@require_GET
+def health_ready(request):
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT 1")
+            cursor.fetchone()
+    except Exception:
+        return HttpResponse("unavailable", status=503, content_type="text/plain")
+    return HttpResponse("ok", content_type="text/plain")
 
 
 def _authenticated_api(view_func):
@@ -88,3 +105,4 @@ def private_storage_url(request):
         return _private_response({"detail": "Private storage is unavailable."}, status=502)
 
     return _private_response(data)
+

@@ -107,3 +107,4 @@ h2 { margin-top: 2rem; font-size: 1.15rem; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
 }
+

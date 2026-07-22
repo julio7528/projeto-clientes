@@ -36,7 +36,7 @@ class Usuario(AbstractUser):
     objects = UsuarioManager()
 
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS: list[str] = []
+    REQUIRED_FIELDS: list[str] = ["nome_completo"]
 
     class Meta:
         verbose_name = "usuario"
