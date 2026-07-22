@@ -1,0 +1,13 @@
+{% extends "usuarios/base.html" %}
+{% block title %}Meu perfil{% endblock %}
+{% block content %}
+  <h1>Meu perfil</h1>
+  <p>{{ usuario_perfil.nome_completo }}</p>
+  <p>{{ usuario_perfil.email }}</p>
+  <a href="{% url 'usuarios:editar-perfil' usuario_perfil.pk %}">Editar perfil</a>
+  <a href="{% url 'usuarios:alterar-senha' %}">Alterar senha</a>
+  <form method="post" action="{% url 'usuarios:logout' %}">
+    {% csrf_token %}
+    <button type="submit">Sair</button>
+  </form>
+{% endblock %}

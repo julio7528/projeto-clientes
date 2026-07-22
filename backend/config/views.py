@@ -9,6 +9,7 @@ from django.views.decorators.http import require_GET, require_POST
 
 from .models import ProtectedFile
 from .supabase import SupabaseServiceError, create_private_storage_signed_url
+from usuarios.permissions import can_access_owned_object
 
 logger = logging.getLogger(__name__)
 
@@ -36,7 +37,7 @@ def protected_profile(request):
     return JsonResponse(
         {
             "id": request.user.pk,
-            "username": request.user.get_username(),
+            "email": request.user.email,
             "is_staff": request.user.is_staff,
         }
     )
@@ -71,7 +72,7 @@ def private_storage_url(request):
         except ProtectedFile.DoesNotExist:
             return _private_response({"detail": "File not found."}, status=404)
 
-        if protected_file.owner_id != request.user.pk:
+        if not can_access_owned_object(request.user, protected_file):
             return _private_response({"detail": "Access denied."}, status=403)
 
         data = create_private_storage_signed_url(

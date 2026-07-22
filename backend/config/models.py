@@ -8,7 +8,7 @@ class ProtectedFile(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         related_name="protected_files",
     )
     storage_path = models.CharField(max_length=1024, unique=True)

@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'usuarios.apps.UsuariosConfig',
     'config',
 ]
 
@@ -80,6 +81,11 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
+
+AUTH_USER_MODEL = "usuarios.Usuario"
+LOGIN_URL = "usuarios:login"
+LOGIN_REDIRECT_URL = "usuarios:perfil"
+LOGOUT_REDIRECT_URL = "usuarios:login"
 
 
 # Database

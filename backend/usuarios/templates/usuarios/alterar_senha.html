@@ -1,0 +1,10 @@
+{% extends "usuarios/base.html" %}
+{% block title %}Alterar senha{% endblock %}
+{% block content %}
+  <h1>Alterar senha</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Alterar senha</button>
+  </form>
+{% endblock %}

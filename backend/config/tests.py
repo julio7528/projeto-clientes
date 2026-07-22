@@ -26,6 +26,7 @@ class SupabaseEnvTests(SimpleTestCase):
             project_root / "config" / "settings.py",
             project_root / "config" / "supabase.py",
             project_root / "config" / "tests.py",
+            project_root / "usuarios" / "tests.py",
         }
         hits = []
 
@@ -95,11 +96,13 @@ class ProtectedApiTests(TestCase):
         self.client = Client()
         user_model = get_user_model()
         self.user_a = user_model.objects.create_user(
-            username="user-a",
+            email="user-a@example.test",
+            nome_completo="User A",
             password="test-password",
         )
         self.user_b = user_model.objects.create_user(
-            username="user-b",
+            email="user-b@example.test",
+            nome_completo="User B",
             password="test-password",
         )
         self.file_a = ProtectedFile.objects.create(
@@ -165,6 +168,21 @@ class ProtectedApiTests(TestCase):
         self.assertEqual(response.status_code, 403)
         signed_url.assert_not_called()
         self.assert_no_secret_values(response)
+
+    @patch("config.views.create_private_storage_signed_url")
+    def test_administrator_can_access_any_owned_file(self, signed_url):
+        administrator = get_user_model().objects.create_superuser(
+            email="admin@example.test",
+            nome_completo="Administrator",
+            password="admin-password",
+        )
+        signed_url.return_value = {"signed_url": "https://example.test/signed", "expires_in": 60}
+        self.client.force_login(administrator)
+
+        response = self.post_storage({"arquivo_id": str(self.file_b.pk)})
+
+        self.assertEqual(response.status_code, 200)
+        signed_url.assert_called_once_with(self.file_b.storage_path, expires_in=None)
 
     def test_nonexistent_file_returns_404(self):
         self.login_user_a()
